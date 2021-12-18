@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kai/widgets/amplitude_widget.dart';
+import 'package:kai/widgets/directory_button.dart';
 import 'package:kai/widgets/format_settings.dart';
 import 'package:kai/widgets/pause_button.dart';
 import 'package:kai/widgets/record_button.dart';
@@ -33,12 +34,10 @@ class RecordPage extends StatelessWidget {
               ),
               Row(
                 mainAxisSize: MainAxisSize.min,
-                children: [
-                  const PauseButton(),
-                  const RecordButton(),
-                  IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.folder_open_rounded)),
+                children: const [
+                  PauseButton(),
+                  RecordButton(),
+                  DirectoryButton(),
                 ],
               ),
               const Spacer(
