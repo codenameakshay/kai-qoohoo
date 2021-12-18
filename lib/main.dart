@@ -6,6 +6,7 @@ import 'package:kai/constants/app_data.dart';
 import 'package:kai/controllers/audio_player_controller.dart';
 import 'package:kai/controllers/path_controller.dart';
 import 'package:kai/controllers/record_controller.dart';
+import 'package:kai/controllers/settings_controller.dart';
 import 'package:kai/controllers/theme_controller.dart';
 import 'package:kai/controllers/timer_controller.dart';
 import 'package:kai/router/route_observer.dart';
@@ -35,6 +36,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => AudioPlayerController(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => SettingsController(),
         ),
       ],
       child: const MyApp(),

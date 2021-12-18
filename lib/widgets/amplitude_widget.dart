@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kai/controllers/record_controller.dart';
+import 'package:kai/controllers/settings_controller.dart';
 import 'package:kai/painters/wave_painter.dart';
 import 'package:kai/utils/smoothing.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +19,6 @@ class _AmplitudeWidgetState extends State<AmplitudeWidget>
     with TickerProviderStateMixin {
   late AnimationController controller;
   late AnimationController amplitudeController;
-  bool realisticData = false;
   @override
   void initState() {
     super.initState();
@@ -48,6 +48,8 @@ class _AmplitudeWidgetState extends State<AmplitudeWidget>
   Widget build(BuildContext context) {
     final RecordController _recordController =
         Provider.of<RecordController>(context);
+    final SettingsController _settingsController =
+        Provider.of<SettingsController>(context);
     final SgFilter filter = SgFilter(
         6,
         (_recordController.amplitude != null &&
@@ -57,7 +59,7 @@ class _AmplitudeWidgetState extends State<AmplitudeWidget>
     return Stack(
       children: [
         CustomPaint(
-          painter: realisticData
+          painter: _settingsController.realisticData
               ? WavePainter(
                   color: Theme.of(context).colorScheme.primary,
                   amplitudeHistory: _recordController.amplitude != null &&

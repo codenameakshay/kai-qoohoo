@@ -5,6 +5,7 @@ import 'package:kai/pages/record_page.dart';
 import 'package:kai/services/locator_service.dart';
 import 'package:kai/services/logger_service.dart';
 import 'package:kai/services/snackbar_service.dart';
+import 'package:kai/widgets/realistic_graph_button.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -28,6 +29,7 @@ class _HomePageState extends State<HomePage> {
     logger.d("${90 / MediaQuery.of(context).size.width}");
     final darkAppBarContents =
         Theme.of(context).scaffoldBackgroundColor.computeLuminance() > 0.5;
+
     return ScaffoldMessenger(
       key: locator<SnackbarService>().scaffoldHomeKey,
       child: Scaffold(
@@ -56,15 +58,7 @@ class _HomePageState extends State<HomePage> {
                       .unselectedItemColor
                   : Theme.of(context).appBarTheme.titleTextStyle?.color,
             ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.filter_list),
-              color: darkAppBarContents
-                  ? Theme.of(context)
-                      .bottomNavigationBarTheme
-                      .unselectedItemColor
-                  : Theme.of(context).appBarTheme.titleTextStyle?.color,
-            ),
+            RealisticGraphButton(darkAppBarContents: darkAppBarContents),
             IconButton(
               onPressed: () {
                 context.read<ThemeController>().setSchemeIndex(

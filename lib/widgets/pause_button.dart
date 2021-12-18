@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kai/controllers/path_controller.dart';
 import 'package:kai/controllers/record_controller.dart';
 import 'package:kai/controllers/timer_controller.dart';
 import 'package:kai/services/record_service.dart';
 import 'package:provider/provider.dart';
-import 'package:record/record.dart';
 
 class PauseButton extends StatelessWidget {
   const PauseButton({
