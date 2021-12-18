@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:kai/services/logger_service.dart';
 import 'package:kai/services/record_service.dart';
 import 'package:record/record.dart';
 
@@ -9,6 +10,7 @@ class RecordController with ChangeNotifier {
 
   RecordController() {
     _recordService.recordStateStream.listen((event) {
+      logger.d('record state changed: $event');
       notifyListeners();
     });
   }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:just_audio/just_audio.dart';
+import 'package:kai/services/logger_service.dart';
 
 class AudioPlayerService {
   final AudioPlayer _audioPlayer = AudioPlayer();
@@ -11,6 +12,7 @@ class AudioPlayerService {
 
   // Set audio source
   Future<void> setSource(String path) async {
+    logger.d("Player source changed: $path");
     final source = AudioSource.uri(Uri.parse(path));
     await _audioPlayer.setAudioSource(source);
   }

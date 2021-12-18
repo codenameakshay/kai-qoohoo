@@ -1,3 +1,4 @@
+import 'package:kai/services/logger_service.dart';
 import 'package:record/record.dart';
 import 'dart:async';
 
@@ -36,7 +37,8 @@ class RecordService {
     try {
       await _record.start(path: path, encoder: AudioEncoder.AAC_HE);
       recordState = RecordState.recording;
-    } catch (e) {
+    } catch (e, s) {
+      logger.e(e, e, s);
       recordState = RecordState.error;
     }
   }
@@ -47,7 +49,8 @@ class RecordService {
       final String path = await _record.stop() ?? "";
       recordState = RecordState.ready;
       return path;
-    } catch (e) {
+    } catch (e, s) {
+      logger.e(e, e, s);
       recordState = RecordState.error;
       return "";
     }
@@ -58,7 +61,8 @@ class RecordService {
     try {
       await _record.pause();
       recordState = RecordState.paused;
-    } catch (e) {
+    } catch (e, s) {
+      logger.e(e, e, s);
       recordState = RecordState.error;
     }
   }
@@ -68,7 +72,8 @@ class RecordService {
     try {
       await _record.resume();
       recordState = RecordState.recording;
-    } catch (e) {
+    } catch (e, s) {
+      logger.e(e, e, s);
       recordState = RecordState.error;
     }
   }
