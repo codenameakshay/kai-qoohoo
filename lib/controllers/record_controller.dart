@@ -15,6 +15,24 @@ class RecordController with ChangeNotifier {
     });
   }
 
+  int get bitRate => _recordService.bitRate;
+  set bitRate(int value) {
+    _recordService.changeBitRate(value);
+    notifyListeners();
+  }
+
+  double get samplingRate => _recordService.samplingRate;
+  set samplingRate(double value) {
+    _recordService.changeSamplingRate(value);
+    notifyListeners();
+  }
+
+  String get fileFormat => _recordService.fileFormat;
+  set fileFormat(String value) {
+    _recordService.changeFileFormat(value);
+    notifyListeners();
+  }
+
   Stream<RecordState> get recordStateStream => _recordService.recordStateStream;
   RecordState? get recordState => _recordService.recordStateStream.valueOrNull;
 

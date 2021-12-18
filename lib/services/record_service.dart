@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:kai/services/logger_service.dart';
 import 'package:record/record.dart';
 import 'dart:async';
@@ -13,6 +15,9 @@ enum RecordState {
 
 class RecordService {
   final Record _record = Record();
+  int bitRate = 128000;
+  double samplingRate = 44100;
+  String fileFormat = "wav";
 
   final _recordStateSubject =
       BehaviorSubject<RecordState>.seeded(RecordState.ready);
@@ -35,12 +40,37 @@ class RecordService {
   // Record audio
   Future<void> startRecord(String path) async {
     try {
-      await _record.start(path: path, encoder: AudioEncoder.AAC_HE);
+      final r = Random();
+      String rNum = "";
+      for (var i = 0; i < 6; i++) {
+        rNum = "$rNum${r.nextInt(9)}";
+      }
+      await _record.start(
+        path: path + "kai-$rNum.$fileFormat",
+        encoder: AudioEncoder.AAC_HE,
+        bitRate: bitRate,
+        samplingRate: samplingRate,
+      );
       recordState = RecordState.recording;
     } catch (e, s) {
       logger.e(e, e, s);
       recordState = RecordState.error;
     }
+  }
+
+  // Change bit rate
+  void changeBitRate(int bitRate) {
+    this.bitRate = bitRate;
+  }
+
+  // Change sampling rate
+  void changeSamplingRate(double samplingRate) {
+    this.samplingRate = samplingRate;
+  }
+
+  // Change file format
+  void changeFileFormat(String fileFormat) {
+    this.fileFormat = fileFormat;
   }
 
   // Stop recording audio
