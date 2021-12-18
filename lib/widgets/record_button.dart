@@ -131,11 +131,13 @@ class _RecordButtonState extends State<RecordButton>
                   case RecordState.recording:
                     timerController.cancelAmplitudeTimer();
                     timerController.cancelTimer();
+                    timerController.resetTimer();
                     recordController.stopRecord();
                     break;
                   case RecordState.paused:
                     timerController.cancelAmplitudeTimer();
                     timerController.cancelTimer();
+                    timerController.resetTimer();
                     recordController.stopRecord();
                     break;
                   case RecordState.error:
