@@ -1,6 +1,6 @@
 import 'dart:async';
 
-class RecordService {
+class TimerService {
   Timer? _timer;
   Timer? _ampTimer;
 
