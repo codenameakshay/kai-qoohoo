@@ -49,15 +49,15 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.search),
-              color: darkAppBarContents
-                  ? Theme.of(context)
-                      .bottomNavigationBarTheme
-                      .unselectedItemColor
-                  : Theme.of(context).appBarTheme.titleTextStyle?.color,
-            ),
+            // IconButton(
+            //   onPressed: () {},
+            //   icon: const Icon(Icons.search),
+            //   color: darkAppBarContents
+            //       ? Theme.of(context)
+            //           .bottomNavigationBarTheme
+            //           .unselectedItemColor
+            //       : Theme.of(context).appBarTheme.titleTextStyle?.color,
+            // ),
             RealisticGraphButton(darkAppBarContents: darkAppBarContents),
             IconButton(
               onPressed: () {
