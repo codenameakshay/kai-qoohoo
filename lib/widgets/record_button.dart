@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:kai/controllers/path_controller.dart';
+import 'package:kai/controllers/record_controller.dart';
 import 'package:kai/painters/ripple_painter.dart';
+import 'package:kai/services/logger_service.dart';
+import 'package:kai/services/record_service.dart';
+import 'package:provider/provider.dart';
 
 class RecordButton extends StatefulWidget {
   const RecordButton({
@@ -49,6 +54,9 @@ class _RecordButtonState extends State<RecordButton>
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final RecordController recordController =
+        Provider.of<RecordController>(context);
+    final PathController pathController = Provider.of<PathController>(context);
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Stack(
@@ -72,10 +80,59 @@ class _RecordButtonState extends State<RecordButton>
             child: FloatingActionButton(
               heroTag: "Record",
               shape: const CircleBorder(),
-              child: const Icon(
-                Icons.mic,
+              child: StreamBuilder(
+                stream: recordController.recordStateStream,
+                builder: (context, snapshot) {
+                  switch (snapshot.data) {
+                    case RecordState.ready:
+                      return const Icon(
+                        Icons.mic,
+                      );
+                    case RecordState.recording:
+                      return const Icon(
+                        Icons.stop,
+                      );
+                    case RecordState.paused:
+                      return const Icon(
+                        Icons.play_arrow,
+                      );
+                    case RecordState.error:
+                      return const Icon(
+                        Icons.error,
+                      );
+                    default:
+                      return const Icon(
+                        Icons.mic,
+                      );
+                  }
+                },
               ),
-              onPressed: () {},
+              onPressed: () async {
+                switch (recordController.recordState) {
+                  case RecordState.ready:
+                    final permission = await recordController.checkPermission();
+                    logger.e(permission);
+                    final path = await pathController.getDocPath();
+                    logger.e(path);
+                    recordController.startRecord(path + "/kai-12.mp3");
+                    break;
+                  case RecordState.recording:
+                    recordController.stopRecord();
+                    break;
+                  case RecordState.paused:
+                    recordController.resumeRecord();
+                    break;
+                  case RecordState.error:
+                    break;
+                  default:
+                    final permission = await recordController.checkPermission();
+                    logger.e(permission);
+                    final path = await pathController.getDocPath();
+                    logger.e(path);
+                    recordController.startRecord(path + "/kai-12.mp3");
+                    break;
+                }
+              },
             ),
           ),
         ],

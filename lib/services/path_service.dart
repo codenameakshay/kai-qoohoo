@@ -10,6 +10,6 @@ class PathService {
 
   // Get application documents directory path
   Future<String> getDocPath() async {
-    return (await getApplicationDocumentsDirectory()).path;
+    return (await getExternalStorageDirectory())?.path ?? "";
   }
 }
