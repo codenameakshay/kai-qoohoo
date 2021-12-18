@@ -1,4 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
+import 'package:kai/pages/home_page.dart';
+import 'package:kai/pages/loading_page.dart';
 import 'package:kai/router/transition_route_builders.dart';
 
 part 'app_router.gr.dart';
