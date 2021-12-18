@@ -4,6 +4,9 @@ class TimerService {
   Timer? _timer;
   Timer? _ampTimer;
 
+  Timer? get timer => _timer;
+  Timer? get ampTimer => _ampTimer;
+
   // Start timer
   void startTimer(Duration duration, Function() action) {
     _timer?.cancel();
