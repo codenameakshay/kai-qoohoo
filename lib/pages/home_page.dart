@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kai/controllers/theme_controller.dart';
 import 'package:kai/pages/record_page.dart';
+import 'package:kai/services/locator_service.dart';
 import 'package:kai/services/logger_service.dart';
+import 'package:kai/services/snackbar_service.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -26,49 +28,60 @@ class _HomePageState extends State<HomePage> {
     logger.d("${90 / MediaQuery.of(context).size.width}");
     final darkAppBarContents =
         Theme.of(context).scaffoldBackgroundColor.computeLuminance() > 0.5;
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarIconBrightness:
-                darkAppBarContents ? Brightness.dark : Brightness.light),
-        title: Text(
-          'Kai',
-          style: TextStyle(
-            color: darkAppBarContents
-                ? Theme.of(context).bottomNavigationBarTheme.unselectedItemColor
-                : Theme.of(context).appBarTheme.titleTextStyle?.color,
+    return ScaffoldMessenger(
+      key: locator<SnackbarService>().scaffoldHomeKey,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarIconBrightness:
+                  darkAppBarContents ? Brightness.dark : Brightness.light),
+          title: Text(
+            'Kai',
+            style: TextStyle(
+              color: darkAppBarContents
+                  ? Theme.of(context)
+                      .bottomNavigationBarTheme
+                      .unselectedItemColor
+                  : Theme.of(context).appBarTheme.titleTextStyle?.color,
+            ),
           ),
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.search),
+              color: darkAppBarContents
+                  ? Theme.of(context)
+                      .bottomNavigationBarTheme
+                      .unselectedItemColor
+                  : Theme.of(context).appBarTheme.titleTextStyle?.color,
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.filter_list),
+              color: darkAppBarContents
+                  ? Theme.of(context)
+                      .bottomNavigationBarTheme
+                      .unselectedItemColor
+                  : Theme.of(context).appBarTheme.titleTextStyle?.color,
+            ),
+            IconButton(
+              onPressed: () {
+                context.read<ThemeController>().setSchemeIndex(
+                      (context.read<ThemeController>().schemeIndex + 1) % 40,
+                    );
+              },
+              icon: const Icon(Icons.brightness_4_rounded),
+              color: darkAppBarContents
+                  ? Theme.of(context)
+                      .bottomNavigationBarTheme
+                      .unselectedItemColor
+                  : Theme.of(context).appBarTheme.titleTextStyle?.color,
+            ),
+          ],
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.search),
-            color: darkAppBarContents
-                ? Theme.of(context).bottomNavigationBarTheme.unselectedItemColor
-                : Theme.of(context).appBarTheme.titleTextStyle?.color,
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.filter_list),
-            color: darkAppBarContents
-                ? Theme.of(context).bottomNavigationBarTheme.unselectedItemColor
-                : Theme.of(context).appBarTheme.titleTextStyle?.color,
-          ),
-          IconButton(
-            onPressed: () {
-              context.read<ThemeController>().setSchemeIndex(
-                    (context.read<ThemeController>().schemeIndex + 1) % 40,
-                  );
-            },
-            icon: const Icon(Icons.brightness_4_rounded),
-            color: darkAppBarContents
-                ? Theme.of(context).bottomNavigationBarTheme.unselectedItemColor
-                : Theme.of(context).appBarTheme.titleTextStyle?.color,
-          ),
-        ],
+        body: const RecordPage(),
       ),
-      body: const RecordPage(),
     );
   }
 }

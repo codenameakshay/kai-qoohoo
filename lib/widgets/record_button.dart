@@ -3,8 +3,10 @@ import 'package:kai/controllers/path_controller.dart';
 import 'package:kai/controllers/record_controller.dart';
 import 'package:kai/controllers/timer_controller.dart';
 import 'package:kai/painters/ripple_painter.dart';
+import 'package:kai/services/locator_service.dart';
 import 'package:kai/services/logger_service.dart';
 import 'package:kai/services/record_service.dart';
+import 'package:kai/services/snackbar_service.dart';
 import 'package:provider/provider.dart';
 
 class RecordButton extends StatefulWidget {
@@ -60,6 +62,7 @@ class _RecordButtonState extends State<RecordButton>
     final PathController pathController = Provider.of<PathController>(context);
     final TimerController timerController =
         Provider.of<TimerController>(context);
+    final SnackbarService _snackbarService = locator<SnackbarService>();
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Stack(
@@ -132,13 +135,17 @@ class _RecordButtonState extends State<RecordButton>
                     timerController.cancelAmplitudeTimer();
                     timerController.cancelTimer();
                     timerController.resetTimer();
-                    recordController.stopRecord();
+                    final path = await recordController.stopRecord();
+                    _snackbarService
+                        .showHomeSnackBar("Recording save at $path");
                     break;
                   case RecordState.paused:
                     timerController.cancelAmplitudeTimer();
                     timerController.cancelTimer();
                     timerController.resetTimer();
-                    recordController.stopRecord();
+                    final path = await recordController.stopRecord();
+                    _snackbarService
+                        .showHomeSnackBar("Recording save at $path");
                     break;
                   case RecordState.error:
                     break;

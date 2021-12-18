@@ -9,6 +9,7 @@ import 'package:kai/services/audio_player_service.dart';
 import 'package:kai/services/logger_service.dart';
 import 'package:kai/services/path_service.dart';
 import 'package:kai/services/record_service.dart';
+import 'package:kai/services/snackbar_service.dart';
 import 'package:kai/services/theme_pref_service.dart';
 import 'package:kai/services/theme_service.dart';
 import 'package:kai/services/timer_service.dart';
@@ -28,6 +29,7 @@ void setupLocator() {
   locator.registerLazySingleton<PathService>(() => PathService());
   locator.registerLazySingleton<RecordService>(() => RecordService());
   locator.registerLazySingleton<TimerService>(() => TimerService());
+  locator.registerLazySingleton<SnackbarService>(() => SnackbarService());
   logger.d('Locator setup took ${stopwatch.elapsedMilliseconds} ms');
   stopwatch.stop();
 }
