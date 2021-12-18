@@ -31,14 +31,18 @@ dependencies:
   auto_route: ^3.2.0
   build_runner: ^2.1.7
   cupertino_icons: ^1.0.2
+  flex_color_scheme: ^4.1.1
   flutter:
     sdk: flutter
   get_it: ^7.2.0
+  google_fonts: ^2.1.0
   just_audio: ^0.9.18
   logger: ^1.1.0
   path_provider: ^2.0.8
+  provider: ^6.0.1
   record: ^3.0.2
   rxdart: ^0.27.3
+  shared_preferences: ^2.0.11
   spring: ^2.0.2
   sprung: ^3.0.0
 
