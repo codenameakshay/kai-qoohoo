@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 class WavePainter extends CustomPainter {
   final Color color;
   final double heightPercentage;
-  final double amplitude;
+  final List<double> amplitudeHistory;
   final double phase;
   final double waveFrequency;
   WavePainter({
     required this.color,
     required this.heightPercentage,
-    required this.amplitude,
+    required this.amplitudeHistory,
     required this.phase,
     required this.waveFrequency,
   });
@@ -25,11 +25,18 @@ class WavePainter extends CustomPainter {
     viewWidth = size.width;
     final path = Path();
     path.reset();
-    path.moveTo(
-        0.0, viewCenterY + amplitude * _getSinY(phase, waveFrequency, -1));
+    path.moveTo(0.0,
+        viewCenterY + amplitudeHistory[0] * _getSinY(phase, waveFrequency, -1));
     for (int i = 1; i < size.width + 1; i++) {
-      path.lineTo(i.toDouble(),
-          viewCenterY + amplitude * _getSinY(phase, waveFrequency, i));
+      path.lineTo(
+          i.toDouble(),
+          viewCenterY +
+              amplitudeHistory[(0 +
+                          ((amplitudeHistory.length - 1 - 0) /
+                                  (size.width - 1)) *
+                              (i - 1))
+                      .toInt()] *
+                  _getSinY(phase, waveFrequency, i));
     }
     path.lineTo(size.width, size.height);
     path.lineTo(0.0, size.height);

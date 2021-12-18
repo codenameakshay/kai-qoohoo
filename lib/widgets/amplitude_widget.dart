@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kai/controllers/record_controller.dart';
 import 'package:kai/painters/wave_painter.dart';
+import 'package:kai/utils/smoothing.dart';
 import 'package:provider/provider.dart';
 
 class AmplitudeWidget extends StatefulWidget {
@@ -47,17 +48,30 @@ class _AmplitudeWidgetState extends State<AmplitudeWidget>
   Widget build(BuildContext context) {
     final RecordController _recordController =
         Provider.of<RecordController>(context);
+    final SgFilter filter = SgFilter(
+        6,
+        (_recordController.amplitude != null &&
+                _recordController.amplitudeHistory.isNotEmpty)
+            ? _recordController.amplitudeHistory.length
+            : _recordController.lengthOfHistory);
     return Stack(
       children: [
         CustomPaint(
           painter: WavePainter(
             color: Theme.of(context).colorScheme.primary,
-            amplitude: _recordController.amplitude != null
-                ? (_recordController.amplitude ?? 0) * 80
-                : (amplitudeController.value * 20),
-            phase: 360 * controller.value,
+            amplitudeHistory: _recordController.amplitude != null &&
+                    _recordController.amplitudeHistory.isNotEmpty
+                ? filter.smooth((_recordController.amplitudeHistory
+                    .map((e) => e * 80)).toList()) as List<double>
+                : List.filled(_recordController.lengthOfHistory, 20),
+            phase: _recordController.amplitude != null
+                ? 0
+                : 360 * controller.value,
             heightPercentage: 0.53,
-            waveFrequency: _recordController.amplitude != null ? 10 : 5,
+            waveFrequency: (_recordController.amplitude != null &&
+                    _recordController.amplitudeHistory.isNotEmpty)
+                ? _recordController.amplitudeHistory.length.toDouble()
+                : 5,
           ),
           child: SizedBox(
             width: MediaQuery.of(context).size.width,

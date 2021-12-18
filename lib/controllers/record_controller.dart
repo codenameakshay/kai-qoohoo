@@ -34,6 +34,7 @@ class RecordController with ChangeNotifier {
 
   double? get amplitude => _recordService.amplitude;
   List<double> get amplitudeHistory => _recordService.amplitudeHistory;
+  int get lengthOfHistory => _recordService.lengthOfHistory;
 
   set recordState(RecordState? value) {
     _recordService.recordState = value ?? RecordState.ready;

@@ -20,7 +20,7 @@ class RecordService {
   String fileFormat = "wav";
   double? amplitude;
   List<double> amplitudeHistory = [];
-  int lengthOfHistory = 10;
+  int lengthOfHistory = 20;
 
   final _recordStateSubject =
       BehaviorSubject<RecordState>.seeded(RecordState.ready);
@@ -151,8 +151,8 @@ class RecordService {
       sum += amplitudeHistory[i] * (i + 1);
     }
     amplitude = sum / (n * (n + 1) / 2);
-    logger.i(amplitudeHistory);
-    logger.i(amplitude);
+    // logger.i(amplitudeHistory);
+    // logger.i(amplitude);
     return amplitude;
   }
 
