@@ -37,6 +37,7 @@ dependencies:
   just_audio: ^0.9.18
   record: ^3.0.2
   path_provider: ^2.0.8
+  rxdart: ^0.27.3
 
 dev_dependencies:
   flutter_test:
