@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:kai/services/locator_service.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  setupLocator();
+  runApp(
+    const MyApp(),
+  );
 }
 
 class MyApp extends StatelessWidget {
