@@ -97,7 +97,7 @@ class _RecordButtonState extends State<RecordButton>
                       );
                     case RecordState.paused:
                       return const Icon(
-                        Icons.play_arrow,
+                        Icons.stop,
                       );
                     case RecordState.error:
                       return const Icon(
@@ -134,8 +134,9 @@ class _RecordButtonState extends State<RecordButton>
                     recordController.stopRecord();
                     break;
                   case RecordState.paused:
-                    timerController.startTimer();
-                    recordController.resumeRecord();
+                    timerController.cancelAmplitudeTimer();
+                    timerController.cancelTimer();
+                    recordController.stopRecord();
                     break;
                   case RecordState.error:
                     break;

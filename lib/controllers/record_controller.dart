@@ -64,7 +64,9 @@ class RecordController with ChangeNotifier {
 
   // Pause recording audio
   Future<void> pauseRecord() async {
-    return await _recordService.pauseRecord();
+    await _recordService.pauseRecord();
+    _recordService.amplitude = null;
+    notifyListeners();
   }
 
   // Resume recording audio
