@@ -57,45 +57,78 @@ class RecordPage extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: Text(
-                            '16.0',
-                            style:
-                                Theme.of(context).textTheme.headline6?.copyWith(
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .headline6
-                                          ?.color
-                                          ?.withOpacity(0.5),
-                                    ),
+                          padding: const EdgeInsets.all(8),
+                          child: TextButton(
+                            onPressed: () {
+                              _recordController.samplingRate = 16000;
+                            },
+                            child: Text(
+                              '16.0',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .headline6
+                                        ?.color
+                                        ?.withOpacity(
+                                            _recordController.samplingRate ==
+                                                    16000
+                                                ? 1
+                                                : 0.5),
+                                  ),
+                            ),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: Text(
-                            '44.1',
-                            style:
-                                Theme.of(context).textTheme.headline6?.copyWith(
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .headline6
-                                          ?.color
-                                          ?.withOpacity(1),
-                                    ),
+                          padding: const EdgeInsets.all(8),
+                          child: TextButton(
+                            onPressed: () {
+                              _recordController.samplingRate = 44100;
+                            },
+                            child: Text(
+                              '44.1',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .headline6
+                                        ?.color
+                                        ?.withOpacity(
+                                            _recordController.samplingRate ==
+                                                    44100
+                                                ? 1
+                                                : 0.5),
+                                  ),
+                            ),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: Text(
-                            '48.0',
-                            style:
-                                Theme.of(context).textTheme.headline6?.copyWith(
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .headline6
-                                          ?.color
-                                          ?.withOpacity(0.5),
-                                    ),
+                          padding: const EdgeInsets.all(8),
+                          child: TextButton(
+                            onPressed: () {
+                              _recordController.samplingRate = 48000;
+                            },
+                            child: Text(
+                              '48.0',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .headline6
+                                        ?.color
+                                        ?.withOpacity(
+                                            _recordController.samplingRate ==
+                                                    48000
+                                                ? 1
+                                                : 0.5),
+                                  ),
+                            ),
                           ),
                         ),
                       ],
@@ -104,45 +137,78 @@ class RecordPage extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: Text(
-                            'MP3',
-                            style:
-                                Theme.of(context).textTheme.headline6?.copyWith(
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .headline6
-                                          ?.color
-                                          ?.withOpacity(0.5),
-                                    ),
+                          padding: const EdgeInsets.all(8),
+                          child: TextButton(
+                            onPressed: () {
+                              _recordController.fileFormat = "mp3";
+                            },
+                            child: Text(
+                              'MP3',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .headline6
+                                        ?.color
+                                        ?.withOpacity(
+                                            _recordController.fileFormat ==
+                                                    "mp3"
+                                                ? 1
+                                                : 0.5),
+                                  ),
+                            ),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: Text(
-                            'WAV',
-                            style:
-                                Theme.of(context).textTheme.headline6?.copyWith(
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .headline6
-                                          ?.color
-                                          ?.withOpacity(1),
-                                    ),
+                          padding: const EdgeInsets.all(8),
+                          child: TextButton(
+                            onPressed: () {
+                              _recordController.fileFormat = "wav";
+                            },
+                            child: Text(
+                              'WAV',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .headline6
+                                        ?.color
+                                        ?.withOpacity(
+                                            _recordController.fileFormat ==
+                                                    "wav"
+                                                ? 1
+                                                : 0.5),
+                                  ),
+                            ),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: Text(
-                            'M4A',
-                            style:
-                                Theme.of(context).textTheme.headline6?.copyWith(
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .headline6
-                                          ?.color
-                                          ?.withOpacity(0.5),
-                                    ),
+                          padding: const EdgeInsets.all(8),
+                          child: TextButton(
+                            onPressed: () {
+                              _recordController.fileFormat = "m4a";
+                            },
+                            child: Text(
+                              'M4A',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .headline6
+                                        ?.color
+                                        ?.withOpacity(
+                                            _recordController.fileFormat ==
+                                                    "m4a"
+                                                ? 1
+                                                : 0.5),
+                                  ),
+                            ),
                           ),
                         ),
                       ],
