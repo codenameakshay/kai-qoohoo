@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kai/controllers/theme_controller.dart';
+import 'package:kai/pages/record_page.dart';
 import 'package:kai/services/logger_service.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -20,6 +23,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    logger.d("${90 / MediaQuery.of(context).size.width}");
     final darkAppBarContents =
         Theme.of(context).scaffoldBackgroundColor.computeLuminance() > 0.5;
     return Scaffold(
@@ -51,25 +55,20 @@ class _HomePageState extends State<HomePage> {
                 ? Theme.of(context).bottomNavigationBarTheme.unselectedItemColor
                 : Theme.of(context).appBarTheme.titleTextStyle?.color,
           ),
+          IconButton(
+            onPressed: () {
+              context.read<ThemeController>().setSchemeIndex(
+                    (context.read<ThemeController>().schemeIndex + 1) % 40,
+                  );
+            },
+            icon: const Icon(Icons.brightness_4_rounded),
+            color: darkAppBarContents
+                ? Theme.of(context).bottomNavigationBarTheme.unselectedItemColor
+                : Theme.of(context).appBarTheme.titleTextStyle?.color,
+          ),
         ],
       ),
-      body: Center(
-        child: Card(
-          margin: const EdgeInsets.all(16),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: const <Widget>[
-                Text(
-                  'Current theme index:',
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+      body: const RecordPage(),
     );
   }
 }
