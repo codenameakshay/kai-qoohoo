@@ -31,6 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   just_audio: ^0.9.18
+  logger: ^1.1.0
   path_provider: ^2.0.8
   record: ^3.0.2
   rxdart: ^0.27.3
