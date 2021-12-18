@@ -366,6 +366,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.2"
+  linalg:
+    dependency: "direct main"
+    description:
+      name: linalg
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.0"
   lints:
     dependency: transitive
     description:
