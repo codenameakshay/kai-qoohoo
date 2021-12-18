@@ -1,42 +1,98 @@
 import 'package:record/record.dart';
 import 'dart:async';
 
+import 'package:rxdart/rxdart.dart';
+
+enum RecordState {
+  ready,
+  recording,
+  paused,
+  error,
+}
+
 class RecordService {
   final Record _record = Record();
 
+  final _recordStateSubject =
+      BehaviorSubject<RecordState>.seeded(RecordState.ready);
+
+  ValueStream<RecordState> get recordStateStream => _recordStateSubject.stream;
+
+  set recordState(RecordState v) => _recordStateSubject.add(v);
+
   // Check permission for recording audio
   Future<bool> checkPermission() async {
-    return await _record.hasPermission();
+    final bool permission = await _record.hasPermission();
+    if (permission) {
+      recordState = RecordState.ready;
+    } else {
+      recordState = RecordState.error;
+    }
+    return permission;
   }
 
   // Record audio
   Future<void> startRecord(String path) async {
-    return await _record.start(path: path, encoder: AudioEncoder.AAC_HE);
+    try {
+      await _record.start(path: path, encoder: AudioEncoder.AAC_HE);
+      recordState = RecordState.recording;
+    } catch (e) {
+      recordState = RecordState.error;
+    }
   }
 
   // Stop recording audio
   Future<String> stopRecord() async {
-    return await _record.stop() ?? "";
+    try {
+      final String path = await _record.stop() ?? "";
+      recordState = RecordState.ready;
+      return path;
+    } catch (e) {
+      recordState = RecordState.error;
+      return "";
+    }
   }
 
   // Pause recording audio
   Future<void> pauseRecord() async {
-    return await _record.pause();
+    try {
+      await _record.pause();
+      recordState = RecordState.paused;
+    } catch (e) {
+      recordState = RecordState.error;
+    }
   }
 
   // Resume recording audio
   Future<void> resumeRecord() async {
-    return await _record.resume();
+    try {
+      await _record.resume();
+      recordState = RecordState.recording;
+    } catch (e) {
+      recordState = RecordState.error;
+    }
   }
 
   // Is recording?
   Future<bool> isRecording() async {
-    return await _record.isRecording();
+    final bool isRecording = await _record.isRecording();
+    if (isRecording) {
+      recordState = RecordState.recording;
+    } else {
+      recordState = RecordState.ready;
+    }
+    return isRecording;
   }
 
   // Is paused?
   Future<bool> isPaused() async {
-    return await _record.isPaused();
+    final bool isPaused = await _record.isPaused();
+    if (isPaused) {
+      recordState = RecordState.paused;
+    } else {
+      recordState = RecordState.ready;
+    }
+    return isPaused;
   }
 
   // Get current amplitude
@@ -46,6 +102,7 @@ class RecordService {
 
   // Dispose record in RecordService
   void dispose() {
+    _recordStateSubject.close();
     _record.dispose();
   }
 }
