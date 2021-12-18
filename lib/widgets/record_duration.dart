@@ -20,12 +20,25 @@ class RecordDuration extends StatelessWidget {
     final TimerController _timerController =
         Provider.of<TimerController>(context);
     return Card(
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.symmetric(
+          vertical: 16,
+          horizontal: _timerController.recordDuration == 0 ? 48 : 16),
       child: Padding(
         padding: const EdgeInsets.all(24),
-        child: Text(
-          '${_formatNumber(_timerController.recordDuration ~/ 60)}:${_formatNumber(_timerController.recordDuration % 60)}',
-          style: Theme.of(context).textTheme.headline2,
+        child: SizedBox(
+          height: 60,
+          child: _timerController.recordDuration == 0
+              ? Center(
+                  child: Text(
+                    'Press the button to start recording',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
+                )
+              : Text(
+                  '${_formatNumber(_timerController.recordDuration ~/ 60)}:${_formatNumber(_timerController.recordDuration % 60)}',
+                  style: Theme.of(context).textTheme.headline2,
+                ),
         ),
       ),
     );
