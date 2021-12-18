@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:kai/services/logger_service.dart';
 import 'package:kai/services/record_service.dart';
-import 'package:record/record.dart';
 
 class RecordController with ChangeNotifier {
   final RecordService _recordService = RecordService();
@@ -33,6 +32,9 @@ class RecordController with ChangeNotifier {
     notifyListeners();
   }
 
+  double? get amplitude => _recordService.amplitude;
+  List<double> get amplitudeHistory => _recordService.amplitudeHistory;
+
   set recordState(RecordState? value) {
     _recordService.recordState = value ?? RecordState.ready;
     notifyListeners();
@@ -53,7 +55,10 @@ class RecordController with ChangeNotifier {
 
   // Stop recording audio
   Future<String> stopRecord() async {
-    return await _recordService.stopRecord();
+    final path = await _recordService.stopRecord();
+    _recordService.amplitude = null;
+    notifyListeners();
+    return path;
   }
 
   // Pause recording audio
@@ -77,8 +82,10 @@ class RecordController with ChangeNotifier {
   }
 
   // Get current amplitude
-  Future<Amplitude> getAmplitude() async {
-    return await _recordService.getAmplitude();
+  Future<double?> getAmplitude() async {
+    final amplitude = await _recordService.getAmplitude();
+    notifyListeners();
+    return amplitude;
   }
 
   // Dispose service

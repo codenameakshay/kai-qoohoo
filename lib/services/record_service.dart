@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'dart:math' as math;
 
 import 'package:kai/services/logger_service.dart';
 import 'package:record/record.dart';
@@ -18,6 +18,9 @@ class RecordService {
   int bitRate = 128000;
   double samplingRate = 44100;
   String fileFormat = "wav";
+  double? amplitude;
+  List<double> amplitudeHistory = [];
+  int lengthOfHistory = 10;
 
   final _recordStateSubject =
       BehaviorSubject<RecordState>.seeded(RecordState.ready);
@@ -40,7 +43,7 @@ class RecordService {
   // Record audio
   Future<void> startRecord(String path) async {
     try {
-      final r = Random();
+      final r = math.Random();
       String rNum = "";
       for (var i = 0; i < 6; i++) {
         rNum = "$rNum${r.nextInt(9)}";
@@ -131,8 +134,26 @@ class RecordService {
   }
 
   // Get current amplitude
-  Future<Amplitude> getAmplitude() async {
-    return await _record.getAmplitude();
+  Future<double?> getAmplitude() async {
+    final tempAmplitude = await _record.getAmplitude();
+    final double currentAmp =
+        math.pow(10, tempAmplitude.current / 20).toDouble();
+    amplitude = currentAmp.abs().clamp(0, 1);
+    if (amplitudeHistory.length >= lengthOfHistory) {
+      amplitudeHistory.removeAt(0);
+      amplitudeHistory.add(amplitude ?? 0);
+    } else {
+      amplitudeHistory.add(amplitude ?? 0);
+    }
+    var sum = 0.0;
+    var n = amplitudeHistory.length;
+    for (int i = 0; i < n; i++) {
+      sum += amplitudeHistory[i] * (i + 1);
+    }
+    amplitude = sum / (n * (n + 1) / 2);
+    logger.i(amplitudeHistory);
+    logger.i(amplitude);
+    return amplitude;
   }
 
   // Dispose record in RecordService

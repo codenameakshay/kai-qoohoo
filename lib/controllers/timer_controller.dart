@@ -12,8 +12,8 @@ class TimerController with ChangeNotifier {
   int get recordDuration => _timerService.recordDuration;
 
   // Start timer
-  void startTimer(Duration duration) {
-    _timerService.startTimer(duration, () {
+  void startTimer() {
+    _timerService.startTimer(() {
       notifyListeners();
     });
     logger.d('timer started');
@@ -28,8 +28,8 @@ class TimerController with ChangeNotifier {
   }
 
   // Start amplitude timer
-  void startAmplitudeTimer(Duration duration, Function() action) {
-    _timerService.startAmplitudeTimer(duration, action);
+  void startAmplitudeTimer(Function() action) {
+    _timerService.startAmplitudeTimer(action);
     logger.d('amplitude timer started');
     notifyListeners();
   }

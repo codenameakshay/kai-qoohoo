@@ -11,9 +11,9 @@ class TimerService {
   int get recordDuration => _recordDuration;
 
   // Start timer
-  void startTimer(Duration duration, Function() action) {
+  void startTimer(Function() action) {
     _timer?.cancel();
-    _timer = Timer.periodic(duration, (Timer t) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
       _recordDuration++;
       action();
     });
@@ -25,9 +25,9 @@ class TimerService {
   }
 
   // Start amplitude timer
-  void startAmplitudeTimer(Duration duration, Function() action) {
+  void startAmplitudeTimer(Function() action) {
     _ampTimer?.cancel();
-    _ampTimer = Timer.periodic(duration, (Timer t) {
+    _ampTimer = Timer.periodic(const Duration(milliseconds: 100), (Timer t) {
       action();
     });
   }

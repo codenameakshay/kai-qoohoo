@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:kai/controllers/record_controller.dart';
 import 'package:kai/painters/wave_painter.dart';
+import 'package:provider/provider.dart';
 
 class AmplitudeWidget extends StatefulWidget {
   const AmplitudeWidget({
@@ -43,15 +45,19 @@ class _AmplitudeWidgetState extends State<AmplitudeWidget>
 
   @override
   Widget build(BuildContext context) {
+    final RecordController _recordController =
+        Provider.of<RecordController>(context);
     return Stack(
       children: [
         CustomPaint(
           painter: WavePainter(
             color: Theme.of(context).colorScheme.primary,
-            amplitude: 20 * amplitudeController.value,
+            amplitude: _recordController.amplitude != null
+                ? (_recordController.amplitude ?? 0) * 80
+                : (amplitudeController.value * 20),
             phase: 360 * controller.value,
             heightPercentage: 0.53,
-            waveFrequency: 5,
+            waveFrequency: _recordController.amplitude != null ? 10 : 5,
           ),
           child: SizedBox(
             width: MediaQuery.of(context).size.width,

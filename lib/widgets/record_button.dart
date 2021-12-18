@@ -119,9 +119,10 @@ class _RecordButtonState extends State<RecordButton>
                       final path = await pathController.getDocPath();
                       logger.e(path);
                       timerController.resetTimer();
-                      timerController.startTimer(const Duration(seconds: 1));
-                      timerController.startAmplitudeTimer(
-                          const Duration(milliseconds: 200), () => null);
+                      timerController.startTimer();
+                      timerController.startAmplitudeTimer(() {
+                        recordController.getAmplitude();
+                      });
                       recordController.startRecord(path);
                     } else {
                       recordController.recordState = RecordState.error;
@@ -133,7 +134,7 @@ class _RecordButtonState extends State<RecordButton>
                     recordController.stopRecord();
                     break;
                   case RecordState.paused:
-                    timerController.startTimer(const Duration(seconds: 1));
+                    timerController.startTimer();
                     recordController.resumeRecord();
                     break;
                   case RecordState.error:
@@ -145,9 +146,10 @@ class _RecordButtonState extends State<RecordButton>
                       final path = await pathController.getDocPath();
                       logger.e(path);
                       timerController.resetTimer();
-                      timerController.startTimer(const Duration(seconds: 1));
-                      timerController.startAmplitudeTimer(
-                          const Duration(milliseconds: 200), () => null);
+                      timerController.startTimer();
+                      timerController.startAmplitudeTimer(() {
+                        recordController.getAmplitude();
+                      });
                       recordController.startRecord(path);
                     } else {
                       recordController.recordState = RecordState.error;
