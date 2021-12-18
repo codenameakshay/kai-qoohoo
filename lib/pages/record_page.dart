@@ -1,14 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:kai/controllers/record_controller.dart';
+import 'package:kai/controllers/timer_controller.dart';
 import 'package:kai/widgets/amplitude_widget.dart';
 import 'package:kai/widgets/record_button.dart';
+import 'package:provider/provider.dart';
 
 class RecordPage extends StatelessWidget {
   const RecordPage({
     Key? key,
   }) : super(key: key);
 
+  String _formatNumber(int number) {
+    String numberStr = number.toString();
+    if (number < 10) {
+      numberStr = '0' + numberStr;
+    }
+
+    return numberStr;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final RecordController _recordController =
+        Provider.of<RecordController>(context);
+    final TimerController _timerController =
+        Provider.of<TimerController>(context);
     return AmplitudeWidget(
       child: Center(
         child: Padding(
@@ -25,7 +41,7 @@ class RecordPage extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(24),
                   child: Text(
-                    '01:12:49',
+                    '${_formatNumber(_timerController.recordDuration ~/ 60)}:${_formatNumber(_timerController.recordDuration % 60)}',
                     style: Theme.of(context).textTheme.headline2,
                   ),
                 ),

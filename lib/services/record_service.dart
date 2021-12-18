@@ -46,7 +46,7 @@ class RecordService {
         rNum = "$rNum${r.nextInt(9)}";
       }
       await _record.start(
-        path: path + "kai-$rNum.$fileFormat",
+        path: path + "/kai-$rNum.$fileFormat",
         encoder: AudioEncoder.AAC_HE,
         bitRate: bitRate,
         samplingRate: samplingRate,

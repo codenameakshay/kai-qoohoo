@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kai/controllers/path_controller.dart';
 import 'package:kai/controllers/record_controller.dart';
+import 'package:kai/controllers/timer_controller.dart';
 import 'package:kai/painters/ripple_painter.dart';
 import 'package:kai/services/logger_service.dart';
 import 'package:kai/services/record_service.dart';
@@ -57,6 +58,8 @@ class _RecordButtonState extends State<RecordButton>
     final RecordController recordController =
         Provider.of<RecordController>(context);
     final PathController pathController = Provider.of<PathController>(context);
+    final TimerController timerController =
+        Provider.of<TimerController>(context);
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Stack(
@@ -112,14 +115,25 @@ class _RecordButtonState extends State<RecordButton>
                   case RecordState.ready:
                     final permission = await recordController.checkPermission();
                     logger.e(permission);
-                    final path = await pathController.getDocPath();
-                    logger.e(path);
-                    recordController.startRecord(path + "/kai-12.mp3");
+                    if (permission) {
+                      final path = await pathController.getDocPath();
+                      logger.e(path);
+                      timerController.resetTimer();
+                      timerController.startTimer(const Duration(seconds: 1));
+                      timerController.startAmplitudeTimer(
+                          const Duration(milliseconds: 200), () => null);
+                      recordController.startRecord(path);
+                    } else {
+                      recordController.recordState = RecordState.error;
+                    }
                     break;
                   case RecordState.recording:
+                    timerController.cancelAmplitudeTimer();
+                    timerController.cancelTimer();
                     recordController.stopRecord();
                     break;
                   case RecordState.paused:
+                    timerController.startTimer(const Duration(seconds: 1));
                     recordController.resumeRecord();
                     break;
                   case RecordState.error:
@@ -127,9 +141,17 @@ class _RecordButtonState extends State<RecordButton>
                   default:
                     final permission = await recordController.checkPermission();
                     logger.e(permission);
-                    final path = await pathController.getDocPath();
-                    logger.e(path);
-                    recordController.startRecord(path + "/kai-12.mp3");
+                    if (permission) {
+                      final path = await pathController.getDocPath();
+                      logger.e(path);
+                      timerController.resetTimer();
+                      timerController.startTimer(const Duration(seconds: 1));
+                      timerController.startAmplitudeTimer(
+                          const Duration(milliseconds: 200), () => null);
+                      recordController.startRecord(path);
+                    } else {
+                      recordController.recordState = RecordState.error;
+                    }
                     break;
                 }
               },

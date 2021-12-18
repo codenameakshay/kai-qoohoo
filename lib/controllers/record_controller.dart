@@ -33,6 +33,11 @@ class RecordController with ChangeNotifier {
     notifyListeners();
   }
 
+  set recordState(RecordState? value) {
+    _recordService.recordState = value ?? RecordState.ready;
+    notifyListeners();
+  }
+
   Stream<RecordState> get recordStateStream => _recordService.recordStateStream;
   RecordState? get recordState => _recordService.recordStateStream.valueOrNull;
 

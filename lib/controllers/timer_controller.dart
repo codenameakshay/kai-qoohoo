@@ -9,11 +9,21 @@ class TimerController with ChangeNotifier {
 
   Timer? get timer => _timerService.timer;
   Timer? get ampTimer => _timerService.ampTimer;
+  int get recordDuration => _timerService.recordDuration;
 
   // Start timer
-  void startTimer(Duration duration, Function() action) {
-    _timerService.startTimer(duration, action);
+  void startTimer(Duration duration) {
+    _timerService.startTimer(duration, () {
+      notifyListeners();
+    });
     logger.d('timer started');
+    notifyListeners();
+  }
+
+  // Set record duration to zero
+  void resetTimer() {
+    _timerService.resetTimer();
+    logger.d('record duration reset');
     notifyListeners();
   }
 
