@@ -3,7 +3,11 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:kai/constants/app_color.dart';
 import 'package:kai/constants/app_data.dart';
+import 'package:kai/controllers/audio_player_controller.dart';
+import 'package:kai/controllers/path_controller.dart';
+import 'package:kai/controllers/record_controller.dart';
 import 'package:kai/controllers/theme_controller.dart';
+import 'package:kai/controllers/timer_controller.dart';
 import 'package:kai/router/route_observer.dart';
 import 'package:kai/services/locator_service.dart';
 import 'package:kai/router/app_router.dart';
@@ -19,6 +23,18 @@ void main() async {
       providers: [
         ChangeNotifierProvider(
           create: (_) => themeController,
+        ),
+        ChangeNotifierProvider(
+          create: (_) => RecordController(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => TimerController(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => PathController(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => AudioPlayerController(),
         ),
       ],
       child: const MyApp(),
