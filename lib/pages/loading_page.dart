@@ -3,6 +3,7 @@ import 'package:kai/controllers/settings_controller.dart';
 import 'package:kai/router/app_router.dart';
 import 'package:kai/services/locator_service.dart';
 import 'package:provider/provider.dart';
+import 'package:record/record.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({Key? key}) : super(key: key);
@@ -14,6 +15,7 @@ class LoadingPage extends StatefulWidget {
 class _LoadingPageState extends State<LoadingPage> {
   @override
   void initState() {
+    Record().hasPermission();
     locator<AppRouter>().replaceAll([const HomeRoute()]);
     super.initState();
   }
