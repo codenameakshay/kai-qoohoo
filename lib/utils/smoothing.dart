@@ -56,7 +56,7 @@ class SgFilter {
       kernel =
           matrix * (matrix.transpose() * matrix).inverse() * matrix.transpose();
     } catch (e, s) {
-      logger.e(e, e, s);
+      // logger.e(e, e, s);
       kernel = matrix * (matrix.transpose() * matrix) * matrix.transpose();
     }
 
