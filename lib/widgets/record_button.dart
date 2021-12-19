@@ -15,7 +15,7 @@ class RecordButton extends StatefulWidget {
     Key? key,
     required this.showLastRecording,
   }) : super(key: key);
-  final Function(bool value, String path) showLastRecording;
+  final Function(bool value, String path, int time) showLastRecording;
 
   @override
   State<RecordButton> createState() => _RecordButtonState();
@@ -277,7 +277,7 @@ class _RecordButtonState extends State<RecordButton>
     logger.e(permission);
     if (permission) {
       action();
-      widget.showLastRecording(false, "");
+      widget.showLastRecording(false, "", 0);
       final path = await pathController.getDocPath();
       logger.e(path);
       timerController.resetTimer();
@@ -299,11 +299,12 @@ class _RecordButtonState extends State<RecordButton>
     final WaveformController waveformController =
         Provider.of<WaveformController>(context, listen: false);
     final SnackbarService _snackbarService = locator<SnackbarService>();
+    final recordingTime = timerController.recordDuration;
     timerController.cancelAmplitudeTimer();
     timerController.cancelTimer();
     timerController.resetTimer();
     final path = await recordController.stopRecord();
-    widget.showLastRecording(true, path);
+    widget.showLastRecording(true, path, recordingTime);
     waveformController.loadWave(path);
     _snackbarService.showHomeSnackBar("Recording save at $path");
   }

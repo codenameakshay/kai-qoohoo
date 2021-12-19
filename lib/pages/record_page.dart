@@ -19,6 +19,7 @@ class RecordPage extends StatefulWidget {
 class _RecordPageState extends State<RecordPage> {
   bool lastRecording = false;
   String path = "";
+  int time = 0;
   @override
   Widget build(BuildContext context) {
     return AmplitudeWidget(
@@ -41,7 +42,9 @@ class _RecordPageState extends State<RecordPage> {
                 flex: 1,
               ),
               lastRecording && path != ""
-                  ? const LastRecordingBubble()
+                  ? LastRecordingBubble(
+                      time: time,
+                    )
                   : const SizedBox(
                       height: 96,
                     ),
@@ -53,10 +56,12 @@ class _RecordPageState extends State<RecordPage> {
                 children: [
                   const PauseButton(),
                   RecordButton(
-                    showLastRecording: (bool newValue, String newPath) {
+                    showLastRecording:
+                        (bool newValue, String newPath, int newTime) {
                       setState(() {
                         path = newPath;
                         lastRecording = newValue;
+                        time = newTime;
                       });
                     },
                   ),
