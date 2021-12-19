@@ -26,7 +26,6 @@ class _RecordButtonState extends State<RecordButton>
   final Tween<double> _sizeTween = Tween(begin: .4, end: 1);
   bool glow = true;
   bool holding = false;
-  // bool dragging = false;
   double x = 0;
   double y = 0;
   bool lock = false;
@@ -126,20 +125,6 @@ class _RecordButtonState extends State<RecordButton>
                   width: (width * 0.218),
                   child: GestureDetector(
                     behavior: HitTestBehavior.translucent,
-                    // onVerticalDragStart: (details) {
-                    //   if (holding) {
-                    //     setState(() {
-                    //       dragging = true;
-                    //     });
-                    //     logger.d("dragging: $dragging");
-                    //   }
-                    // },
-                    // onVerticalDragEnd: (details) {
-                    //   setState(() {
-                    //     dragging = false;
-                    //   });
-                    //   logger.d("dragging: $dragging");
-                    // },
                     onLongPressStart: (details) async {
                       setState(() {
                         x = details.localPosition.dx;
@@ -209,11 +194,6 @@ class _RecordButtonState extends State<RecordButton>
                       //     "x: $x, y: $y offset:${details.localOffsetFromOrigin.dy.abs() > 130} direction:${details.localOffsetFromOrigin.direction.isNegative} lock:${details.localOffsetFromOrigin.dy.abs() > 130 && details.localOffsetFromOrigin.direction.isNegative}");
                     },
                     onLongPressEnd: (details) async {
-                      // setState(() {
-                      //   x = details.localPosition.dx;
-                      //   y = details.localPosition.dy;
-                      // });
-                      // logger.i("x: $x, y: $y");
                       switch (recordController.recordState) {
                         case RecordState.ready:
                           break;
