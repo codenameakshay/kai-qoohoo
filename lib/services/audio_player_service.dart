@@ -19,7 +19,7 @@ class AudioPlayerService {
 
   // Play audio
   Future<void> play() async {
-    await _audioPlayer.play();
+    return await _audioPlayer.play();
   }
 
   // Pause audio

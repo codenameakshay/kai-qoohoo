@@ -44,6 +44,7 @@ class _RecordPageState extends State<RecordPage> {
               lastRecording && path != ""
                   ? LastRecordingBubble(
                       time: time,
+                      path: path,
                     )
                   : const SizedBox(
                       height: 96,

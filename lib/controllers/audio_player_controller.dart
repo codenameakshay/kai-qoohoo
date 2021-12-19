@@ -37,7 +37,7 @@ class AudioPlayerController with ChangeNotifier {
 
   // Play audio
   Future<void> play() async {
-    await _audioPlayerService.play();
+    return await _audioPlayerService.play();
   }
 
   // Pause audio

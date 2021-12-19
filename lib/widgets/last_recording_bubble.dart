@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:kai/controllers/audio_player_controller.dart';
 import 'package:kai/services/logger_service.dart';
 import 'package:kai/widgets/audio_waveform_widget.dart';
+import 'package:provider/provider.dart';
 
 class LastRecordingBubble extends StatelessWidget {
   const LastRecordingBubble({
     Key? key,
     required this.time,
+    required this.path,
   }) : super(key: key);
   final int time;
+  final String path;
 
   String _formatNumber(int number) {
     String numberStr = number.toString();
@@ -25,7 +29,7 @@ class LastRecordingBubble extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const LRPlayPauseButton(),
+          LRPlayPauseButton(path: path),
           AudioWaveformWidget(
             duration: time,
             strokeWidth: 4,
@@ -58,8 +62,11 @@ class LastRecordingBubble extends StatelessWidget {
 }
 
 class LRPlayPauseButton extends StatefulWidget {
-  const LRPlayPauseButton({Key? key}) : super(key: key);
-
+  const LRPlayPauseButton({
+    Key? key,
+    required this.path,
+  }) : super(key: key);
+  final String path;
   @override
   _LRPlayPauseButtonState createState() => _LRPlayPauseButtonState();
 }
@@ -92,18 +99,27 @@ class _LRPlayPauseButtonState extends State<LRPlayPauseButton>
 
   @override
   Widget build(BuildContext context) {
+    final AudioPlayerController audioPlayerController =
+        Provider.of<AudioPlayerController>(context);
     return IconButton(
-      onPressed: () {
+      onPressed: () async {
         logger.d("Button pressed!");
         if (playing) {
           controller.reverse();
+          audioPlayerController.pause();
           setState(() {
             playing = false;
           });
         } else {
           controller.forward();
+          await audioPlayerController.setSource(widget.path);
           setState(() {
             playing = true;
+          });
+          await audioPlayerController.play();
+          controller.reverse();
+          setState(() {
+            playing = false;
           });
         }
       },
