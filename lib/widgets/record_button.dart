@@ -183,6 +183,9 @@ class _RecordButtonState extends State<RecordButton>
                     }
                   },
                 ),
+                elevation: recordController.recordState == RecordState.recording
+                    ? 6
+                    : 0,
                 onPressed: () async {
                   switch (recordController.recordState) {
                     case RecordState.ready:
@@ -241,6 +244,18 @@ class _RecordButtonState extends State<RecordButton>
                 },
               ),
             ),
+          ),
+          IgnorePointer(
+            child: recordController.recordState == RecordState.recording
+                ? SizedBox(
+                    height: ((width * 0.258 * 0.2 * animation.value) +
+                        width * 0.258 * 0.8),
+                    width: ((width * 0.258 * 0.2 * animation.value) +
+                        width * 0.258 * 0.8),
+                    child: CircularProgressIndicator(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ))
+                : Container(),
           ),
         ],
       ),
