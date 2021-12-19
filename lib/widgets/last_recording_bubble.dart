@@ -30,7 +30,7 @@ class LastRecordingBubble extends StatelessWidget {
             duration: time,
             strokeWidth: 4,
             waveColor: Theme.of(context).colorScheme.secondary,
-            child: SizedBox(
+            child: const SizedBox(
               height: 60,
               width: 70,
             ),

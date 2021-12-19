@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:kai/services/logger_service.dart';
 
 class AudioWaveformPainter extends CustomPainter {
   final double strokeWidth;
@@ -24,7 +23,6 @@ class AudioWaveformPainter extends CustomPainter {
     if (duration == 0) return;
     // logger.d("Paint ahead");
 
-    double height = size.height;
     // logger.d("Paint before for loop");
     for (double i = 0; i <= duration; i += 1) {
       final List<double> plotList = [
