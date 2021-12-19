@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:intl/intl.dart';
 import 'package:kai/services/logger_service.dart';
 import 'package:record/record.dart';
 import 'dart:async';
@@ -42,14 +43,10 @@ class RecordService {
 
   // Record audio
   Future<void> startRecord(String path) async {
+    final DateFormat dateFormat = DateFormat("yyyy-MM-dd-HH-mm-ss");
     try {
-      final r = math.Random();
-      String rNum = "";
-      for (var i = 0; i < 6; i++) {
-        rNum = "$rNum${r.nextInt(9)}";
-      }
       await _record.start(
-        path: path + "/kai-$rNum.$fileFormat",
+        path: path + "/kai_${dateFormat.format(DateTime.now())}.$fileFormat",
         encoder: AudioEncoder.AAC_HE,
         bitRate: bitRate,
         samplingRate: samplingRate,
