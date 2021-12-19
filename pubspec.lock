@@ -22,6 +22,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
+  archive:
+    dependency: transitive
+    description:
+      name: archive
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.6"
   args:
     dependency: transitive
     description:
@@ -93,7 +100,7 @@ packages:
     source: hosted
     version: "2.0.6"
   build_runner:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: build_runner
       url: "https://pub.dartlang.org"
@@ -244,6 +251,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_launcher_icons:
+    dependency: "direct dev"
+    description:
+      name: flutter_launcher_icons
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.2"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -324,6 +338,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
+  image:
+    dependency: transitive
+    description:
+      name: image
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.0"
   intl:
     dependency: "direct main"
     description:
@@ -499,6 +520,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.4"
+  petitparser:
+    dependency: transitive
+    description:
+      name: petitparser
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.4.0"
   platform:
     dependency: transitive
     description:
@@ -646,13 +674,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
-  simple_animations:
-    dependency: transitive
-    description:
-      name: simple_animations
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.2.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -672,13 +693,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.1"
-  spring:
-    dependency: "direct main"
-    description:
-      name: spring
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.2"
   sprung:
     dependency: "direct main"
     description:
@@ -714,20 +728,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
-  supercharged:
-    dependency: transitive
-    description:
-      name: supercharged
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.1"
-  supercharged_dart:
-    dependency: transitive
-    description:
-      name: supercharged_dart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.1"
   term_glyph:
     dependency: transitive
     description:
@@ -770,13 +770,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.4"
-  universal_platform:
-    dependency: transitive
-    description:
-      name: universal_platform
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0+1"
   uuid:
     dependency: transitive
     description:
@@ -819,6 +812,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.0"
+  xml:
+    dependency: transitive
+    description:
+      name: xml
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.3.1"
   yaml:
     dependency: transitive
     description:
