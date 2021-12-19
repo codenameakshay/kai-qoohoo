@@ -20,8 +20,38 @@ This is a basic audio recording app, which is developed using Flutter.
 
 
 
+## Screenshots
 
+| Record Screen (Default theme) 	| Record Screen (Theme #2) 	| Record Screen (Theme #3) 	| Record Screen (Theme #4) 	| Record Screen (Theme #5) 	|
+|--------------	|--------------	|--------------	|--------------	|--------------	|
+|  ![Record Screen (Default theme)](screenshots/1.jpg) | ![Record Screen (Theme #2)](screenshots/2.jpg) 	| ![Record Screen (Theme #3)](screenshots/3.jpg)  	| ![Record Screen (Theme #4)](screenshots/4.jpg)   	|  ![Record Screen (Theme #5)](screenshots/5.jpg) 	|
 
+| Recording 	| Tap & Hold Lock 	| Previous Recordings 	| Last Recording 	| Paused 	|
+|--------------	|--------------	|--------------	|--------------	|--------------	|
+|  ![Recording](screenshots/8.jpg) | ![Tap & Hold Lock](screenshots/9.jpg) 	| ![Previous Recordings](screenshots/10.jpg)  	| ![Last Recording](screenshots/11.jpg)   	|  ![Paused](screenshots/12.jpg) 	|
+
+More screenshots are available in the `/screenshots` folder.
+## Features
+
+ - Record high quality audio
+ - Quick record with long press
+ - Pause and resume recording (API 24+ (Nougat & above) only)
+ - Record in various file formats (.mp3, .wav, .m4a)
+ - Record in various sampling rates (16, 44.1, 48)
+ - Currently records only in 128kbps sampling rate for less size files
+ - Play last recording easily in one-tap
+ - View all previous recordings
+ - Play any of the recording
+ - Smooth animations and haptic feedback
+ - Visualise amplitude in real-time
+ - Has support for 40+ themes
+
+## Permissions
+
+Kai requires only these three permissions:
+ - `[INTERNET]` To access the internet for downloading the fonts (Rubik from Google Fonts). App works without internet too.
+ - `[MICROPHONE]` To record audio (needed).
+ - `[WRITE_EXTERNAL_STORAGE]` To save the audio file, app accesses application documents folder and no other folder is visible (Scoped storage), works if denied too.
 ## Built With
 
 * [Flutter](https://flutter.dev/)
@@ -149,6 +179,7 @@ lib
  ┣ widgets
  ┃ ┣ amplitude_widget.dart (Widget to draw the amplitude waveform)
  ┃ ┣ audio_waveform_widget.dart (Widget to draw the waveform, not in use)
+ ┃ ┣ bug_report_button.dart (Button to send bug reports)
  ┃ ┣ directory_button.dart (Widget to display the directory button)
  ┃ ┣ directory_sheet.dart (Widget to display the directory sheet)
  ┃ ┣ format_settings.dart (Widget to display the format settings)
@@ -169,7 +200,10 @@ lib
 All the different packages used throughout the app, with thier explanations.
 - `animations: ^2.0.2` - Used for animations during page/route transitions
 - `auto_route: ^3.2.0` - Used to generate routes automatically
+- `device_info_plus: ^3.2.0` - Used to get device info for bug reports
 - `flex_color_scheme: ^4.1.1` - Used for theming
+- `flutter_archive: ^4.1.0` - Used for creating zip file for logs
+- `flutter_mailer: ^2.0.1` - Used for sending bug reports via email
 - `get_it: ^7.2.0` - Used for state management
 - `google_fonts: ^2.1.0` - Used for Rubik font
 - `intl: ^0.17.0` - Used to format date and time
