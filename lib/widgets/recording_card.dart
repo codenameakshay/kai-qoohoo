@@ -14,6 +14,14 @@ class RecordingCard extends StatelessWidget {
   }) : super(key: key);
 
   final FileSystemEntity file;
+  String _formatNumber(int number) {
+    String numberStr = number.toString();
+    if (number < 10) {
+      numberStr = '0' + numberStr;
+    }
+
+    return numberStr;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,28 +46,50 @@ class RecordingCard extends StatelessWidget {
         elevation: 0,
         color: Theme.of(context).colorScheme.primaryVariant,
         child: Consumer<AudioPlayerController>(builder: (context, apc, child) {
-          return ListTile(
-            onTap: () async {
-              apc.play();
-            },
-            leading: const Icon(Icons.music_note),
-            title: Text(dateFormat.format(dateTime)),
-            subtitle:
-                Text("${samplingRate / 1000}   ${fileFormat.toUpperCase()}"),
-            trailing: Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondary,
-                  shape: BoxShape.circle,
-                ),
-                padding: const EdgeInsets.all(8),
-                child: Icon(
-                  apc.audioPlayer.playing &&
-                          apc.audioPlayer.processingState !=
-                              ProcessingState.completed
-                      ? Icons.pause
-                      : Icons.play_arrow,
-                  color: Theme.of(context).colorScheme.onSecondary,
-                )),
+          return Column(
+            children: [
+              ListTile(
+                onTap: () async {
+                  await apc.setSource(file.path);
+                  apc.play();
+                },
+                leading: const Icon(Icons.music_note),
+                title: Text(dateFormat.format(dateTime)),
+                subtitle: Text(
+                    "${_formatNumber((apc.duration?.inSeconds ?? 0) ~/ 60)}:${_formatNumber((apc.duration?.inSeconds ?? 0) % 60)}   ${samplingRate / 1000}   ${fileFormat.toUpperCase()}"),
+                trailing: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.secondary,
+                      shape: BoxShape.circle,
+                    ),
+                    padding: const EdgeInsets.all(8),
+                    child: Icon(
+                      apc.audioPlayer.playing &&
+                              apc.audioPlayer.processingState !=
+                                  ProcessingState.completed
+                          ? Icons.pause
+                          : Icons.play_arrow,
+                      color: Theme.of(context).colorScheme.onSecondary,
+                    )),
+              ),
+              Stack(
+                children: [
+                  Container(
+                    height: 2,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                  Container(
+                    height: 2,
+                    width: MediaQuery.of(context).size.width *
+                        0.9 *
+                        (apc.audioPlayer.position.inMilliseconds /
+                                (apc.audioPlayer.duration?.inMilliseconds ?? 1))
+                            .toDouble(),
+                    color: Theme.of(context).colorScheme.onSecondary,
+                  ),
+                ],
+              ),
+            ],
           );
         }),
       ),
