@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kai/controllers/record_controller.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +23,7 @@ class FormatSettings extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 child: TextButton(
                   onPressed: () {
+                    HapticFeedback.vibrate();
                     _recordController.samplingRate = 16000;
                   },
                   child: Text(
@@ -43,6 +45,7 @@ class FormatSettings extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 child: TextButton(
                   onPressed: () {
+                    HapticFeedback.vibrate();
                     _recordController.samplingRate = 44100;
                   },
                   child: Text(
@@ -64,6 +67,7 @@ class FormatSettings extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 child: TextButton(
                   onPressed: () {
+                    HapticFeedback.vibrate();
                     _recordController.samplingRate = 48000;
                   },
                   child: Text(
@@ -90,6 +94,7 @@ class FormatSettings extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 child: TextButton(
                   onPressed: () {
+                    HapticFeedback.vibrate();
                     _recordController.fileFormat = "mp3";
                   },
                   child: Text(
@@ -111,6 +116,7 @@ class FormatSettings extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 child: TextButton(
                   onPressed: () {
+                    HapticFeedback.vibrate();
                     _recordController.fileFormat = "wav";
                   },
                   child: Text(
@@ -132,6 +138,7 @@ class FormatSettings extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 child: TextButton(
                   onPressed: () {
+                    HapticFeedback.vibrate();
                     _recordController.fileFormat = "m4a";
                   },
                   child: Text(

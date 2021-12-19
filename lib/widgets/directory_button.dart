@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kai/controllers/path_controller.dart';
 import 'package:kai/widgets/directory_sheet.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +15,7 @@ class DirectoryButton extends StatelessWidget {
     return IconButton(
         onPressed: () {
           _pathController.getDocs();
+          HapticFeedback.vibrate();
           Future.delayed(const Duration(seconds: 0)).then(
             (value) => showModalBottomSheet(
               context: context,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kai/controllers/path_controller.dart';
 import 'package:kai/controllers/record_controller.dart';
 import 'package:kai/controllers/timer_controller.dart';
@@ -268,6 +269,7 @@ class _RecordButtonState extends State<RecordButton>
   }
 
   Future<void> _startRecording(Function() action) async {
+    HapticFeedback.vibrate();
     final RecordController recordController =
         Provider.of<RecordController>(context, listen: false);
     final TimerController timerController =
@@ -293,6 +295,7 @@ class _RecordButtonState extends State<RecordButton>
   }
 
   void _stopRecording() async {
+    HapticFeedback.vibrate();
     final RecordController recordController =
         Provider.of<RecordController>(context, listen: false);
     final TimerController timerController =
@@ -312,6 +315,7 @@ class _RecordButtonState extends State<RecordButton>
   }
 
   Future<void> _resumeRecording(Function() action) async {
+    HapticFeedback.vibrate();
     final RecordController recordController =
         Provider.of<RecordController>(context, listen: false);
     final TimerController timerController =

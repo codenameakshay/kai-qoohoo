@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kai/controllers/audio_player_controller.dart';
 import 'package:kai/services/logger_service.dart';
 import 'package:kai/widgets/audio_waveform_widget.dart';
@@ -104,6 +105,7 @@ class _LRPlayPauseButtonState extends State<LRPlayPauseButton>
     return IconButton(
       onPressed: () async {
         logger.d("Button pressed!");
+        HapticFeedback.vibrate();
         if (playing) {
           controller.reverse();
           audioPlayerController.pause();

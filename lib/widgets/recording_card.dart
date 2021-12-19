@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:kai/controllers/audio_player_controller.dart';
@@ -53,6 +54,7 @@ class RecordingCard extends StatelessWidget {
             children: [
               ListTile(
                 onTap: () async {
+                  HapticFeedback.vibrate();
                   await apc.setSource(file.path);
                   apc.play();
                 },
