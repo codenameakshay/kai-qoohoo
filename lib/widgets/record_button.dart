@@ -83,37 +83,9 @@ class _RecordButtonState extends State<RecordButton>
                 ((width * 0.218 * 0.2 * animation.value) + width * 0.218 * 0.8),
             width:
                 ((width * 0.218 * 0.2 * animation.value) + width * 0.218 * 0.8),
-            child: FloatingActionButton(
-              heroTag: "Record",
-              shape: const CircleBorder(),
-              child: StreamBuilder(
-                stream: recordController.recordStateStream,
-                builder: (context, snapshot) {
-                  switch (snapshot.data) {
-                    case RecordState.ready:
-                      return const Icon(
-                        Icons.mic,
-                      );
-                    case RecordState.recording:
-                      return const Icon(
-                        Icons.stop,
-                      );
-                    case RecordState.paused:
-                      return const Icon(
-                        Icons.stop,
-                      );
-                    case RecordState.error:
-                      return const Icon(
-                        Icons.error,
-                      );
-                    default:
-                      return const Icon(
-                        Icons.mic,
-                      );
-                  }
-                },
-              ),
-              onPressed: () async {
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onLongPressStart: (details) async {
                 switch (recordController.recordState) {
                   case RecordState.ready:
                     final permission = await recordController.checkPermission();
@@ -132,20 +104,8 @@ class _RecordButtonState extends State<RecordButton>
                     }
                     break;
                   case RecordState.recording:
-                    timerController.cancelAmplitudeTimer();
-                    timerController.cancelTimer();
-                    timerController.resetTimer();
-                    final path = await recordController.stopRecord();
-                    _snackbarService
-                        .showHomeSnackBar("Recording save at $path");
                     break;
                   case RecordState.paused:
-                    timerController.cancelAmplitudeTimer();
-                    timerController.cancelTimer();
-                    timerController.resetTimer();
-                    final path = await recordController.stopRecord();
-                    _snackbarService
-                        .showHomeSnackBar("Recording save at $path");
                     break;
                   case RecordState.error:
                     break;
@@ -167,6 +127,119 @@ class _RecordButtonState extends State<RecordButton>
                     break;
                 }
               },
+              onLongPressEnd: (details) async {
+                switch (recordController.recordState) {
+                  case RecordState.ready:
+                    break;
+                  case RecordState.recording:
+                    timerController.cancelAmplitudeTimer();
+                    timerController.cancelTimer();
+                    timerController.resetTimer();
+                    final path = await recordController.stopRecord();
+                    _snackbarService
+                        .showHomeSnackBar("Recording save at $path");
+                    break;
+                  case RecordState.paused:
+                    break;
+                  case RecordState.error:
+                    break;
+                  default:
+                    timerController.cancelAmplitudeTimer();
+                    timerController.cancelTimer();
+                    timerController.resetTimer();
+                    final path = await recordController.stopRecord();
+                    _snackbarService
+                        .showHomeSnackBar("Recording save at $path");
+                    break;
+                }
+              },
+              child: FloatingActionButton(
+                heroTag: "Record",
+                shape: const CircleBorder(),
+                child: StreamBuilder(
+                  stream: recordController.recordStateStream,
+                  builder: (context, snapshot) {
+                    switch (snapshot.data) {
+                      case RecordState.ready:
+                        return const Icon(
+                          Icons.mic,
+                        );
+                      case RecordState.recording:
+                        return const Icon(
+                          Icons.stop,
+                        );
+                      case RecordState.paused:
+                        return const Icon(
+                          Icons.stop,
+                        );
+                      case RecordState.error:
+                        return const Icon(
+                          Icons.error,
+                        );
+                      default:
+                        return const Icon(
+                          Icons.mic,
+                        );
+                    }
+                  },
+                ),
+                onPressed: () async {
+                  switch (recordController.recordState) {
+                    case RecordState.ready:
+                      final permission =
+                          await recordController.checkPermission();
+                      logger.e(permission);
+                      if (permission) {
+                        final path = await pathController.getDocPath();
+                        logger.e(path);
+                        timerController.resetTimer();
+                        timerController.startTimer();
+                        timerController.startAmplitudeTimer(() {
+                          recordController.getAmplitude();
+                        });
+                        recordController.startRecord(path);
+                      } else {
+                        recordController.recordState = RecordState.error;
+                      }
+                      break;
+                    case RecordState.recording:
+                      timerController.cancelAmplitudeTimer();
+                      timerController.cancelTimer();
+                      timerController.resetTimer();
+                      final path = await recordController.stopRecord();
+                      _snackbarService
+                          .showHomeSnackBar("Recording save at $path");
+                      break;
+                    case RecordState.paused:
+                      timerController.cancelAmplitudeTimer();
+                      timerController.cancelTimer();
+                      timerController.resetTimer();
+                      final path = await recordController.stopRecord();
+                      _snackbarService
+                          .showHomeSnackBar("Recording save at $path");
+                      break;
+                    case RecordState.error:
+                      break;
+                    default:
+                      final permission =
+                          await recordController.checkPermission();
+                      logger.e(permission);
+                      if (permission) {
+                        final path = await pathController.getDocPath();
+                        logger.e(path);
+                        timerController.resetTimer();
+                        timerController.startTimer();
+                        timerController.startAmplitudeTimer(() {
+                          recordController.getAmplitude();
+                        });
+                        recordController.startRecord(path);
+                      } else {
+                        recordController.recordState = RecordState.error;
+                      }
+                      break;
+                  }
+                },
+              ),
             ),
           ),
         ],
