@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:kai/controllers/path_controller.dart';
 import 'package:kai/controllers/record_controller.dart';
@@ -25,6 +26,7 @@ class _RecordButtonState extends State<RecordButton>
   final Tween<double> _sizeTween = Tween(begin: .4, end: 1);
   bool glow = true;
   bool holding = false;
+  IconData iconData = Icons.lock_open;
   @override
   void initState() {
     super.initState();
@@ -74,223 +76,328 @@ class _RecordButtonState extends State<RecordButton>
               duration: const Duration(milliseconds: 250),
               top: holding ? -70 : 60,
               height: holding ? 56 : 0,
-              child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Theme.of(context).colorScheme.surface,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Icon(
-                      Icons.lock,
-                      size: holding ? 24 : 0,
+              child: DragTarget(
+                onWillAccept: (data) {
+                  setState(() {
+                    iconData = Icons.lock;
+                  });
+                  return true;
+                },
+                onLeave: (data) {
+                  setState(() {
+                    iconData = Icons.lock_open;
+                  });
+                },
+                onAccept: (data) {
+                  setState(() {
+                    iconData = Icons.lock_open;
+                  });
+                },
+                builder: (context, candidateData, rejectedData) => Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Theme.of(context).colorScheme.surface,
                     ),
-                  ))),
-          CustomPaint(
-            painter: RipplePainter(
-                color: Theme.of(context).colorScheme.secondary,
-                animationValue: animation.value,
-                width: width * 0.486),
-            child: SizedBox(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Icon(
+                        iconData,
+                        size: holding ? 24 : 0,
+                      ),
+                    )),
+              )),
+          Draggable(
+            onDragStarted: () => logger.d("Drag started"),
+            axis: Axis.vertical,
+            feedback: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.center,
+              children: [
+                CustomPaint(
+                  painter: RipplePainter(
+                      color: Theme.of(context).colorScheme.secondary,
+                      animationValue: animation.value,
+                      width: width * 0.486),
+                  child: SizedBox(
+                    height: width * 0.486,
+                    width: width * 0.486,
+                  ),
+                ),
+                SizedBox(
+                  height: ((width * 0.218 * 0.2 * animation.value) +
+                      width * 0.218 * 0.8),
+                  width: ((width * 0.218 * 0.2 * animation.value) +
+                      width * 0.218 * 0.8),
+                  child: FloatingActionButton(
+                    heroTag: "Record",
+                    shape: const CircleBorder(),
+                    child: StreamBuilder(
+                      stream: recordController.recordStateStream,
+                      builder: (context, snapshot) {
+                        switch (snapshot.data) {
+                          case RecordState.ready:
+                            return const Icon(
+                              Icons.mic,
+                            );
+                          case RecordState.recording:
+                            return const Icon(
+                              Icons.stop,
+                            );
+                          case RecordState.paused:
+                            return const Icon(
+                              Icons.stop,
+                            );
+                          case RecordState.error:
+                            return const Icon(
+                              Icons.error,
+                            );
+                          default:
+                            return const Icon(
+                              Icons.mic,
+                            );
+                        }
+                      },
+                    ),
+                    elevation:
+                        recordController.recordState == RecordState.recording &&
+                                holding
+                            ? 6
+                            : 0,
+                    onPressed: () {},
+                  ),
+                ),
+                IgnorePointer(
+                  child: recordController.recordState == RecordState.recording
+                      ? SizedBox(
+                          height: ((width * 0.258 * 0.2 * animation.value) +
+                              width * 0.258 * 0.8),
+                          width: ((width * 0.258 * 0.2 * animation.value) +
+                              width * 0.258 * 0.8),
+                          child: CircularProgressIndicator(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ))
+                      : Container(),
+                ),
+              ],
+            ),
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.center,
+              children: [
+                CustomPaint(
+                  painter: RipplePainter(
+                      color: Theme.of(context).colorScheme.secondary,
+                      animationValue: animation.value,
+                      width: width * 0.486),
+                  child: SizedBox(
+                    height: width * 0.486,
+                    width: width * 0.486,
+                  ),
+                ),
+                SizedBox(
+                  height: ((width * 0.218 * 0.2 * animation.value) +
+                      width * 0.218 * 0.8),
+                  width: ((width * 0.218 * 0.2 * animation.value) +
+                      width * 0.218 * 0.8),
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onLongPressStart: (details) async {
+                      switch (recordController.recordState) {
+                        case RecordState.ready:
+                          final permission =
+                              await recordController.checkPermission();
+                          logger.e(permission);
+                          if (permission) {
+                            setState(() {
+                              holding = true;
+                            });
+                            final path = await pathController.getDocPath();
+                            logger.e(path);
+                            timerController.resetTimer();
+                            timerController.startTimer();
+                            timerController.startAmplitudeTimer(() {
+                              recordController.getAmplitude();
+                            });
+                            recordController.startRecord(path);
+                          } else {
+                            recordController.recordState = RecordState.error;
+                          }
+                          break;
+                        case RecordState.recording:
+                          setState(() {
+                            holding = true;
+                          });
+                          break;
+                        case RecordState.paused:
+                          break;
+                        case RecordState.error:
+                          break;
+                        default:
+                          final permission =
+                              await recordController.checkPermission();
+                          logger.e(permission);
+                          if (permission) {
+                            setState(() {
+                              holding = true;
+                            });
+                            final path = await pathController.getDocPath();
+                            logger.e(path);
+                            timerController.resetTimer();
+                            timerController.startTimer();
+                            timerController.startAmplitudeTimer(() {
+                              recordController.getAmplitude();
+                            });
+                            recordController.startRecord(path);
+                          } else {
+                            recordController.recordState = RecordState.error;
+                          }
+                          break;
+                      }
+                    },
+                    onLongPressEnd: (details) async {
+                      switch (recordController.recordState) {
+                        case RecordState.ready:
+                          break;
+                        case RecordState.recording:
+                          setState(() {
+                            holding = false;
+                          });
+                          timerController.cancelAmplitudeTimer();
+                          timerController.cancelTimer();
+                          timerController.resetTimer();
+                          final path = await recordController.stopRecord();
+                          _snackbarService
+                              .showHomeSnackBar("Recording save at $path");
+                          break;
+                        case RecordState.paused:
+                          break;
+                        case RecordState.error:
+                          break;
+                        default:
+                          setState(() {
+                            holding = false;
+                          });
+                          timerController.cancelAmplitudeTimer();
+                          timerController.cancelTimer();
+                          timerController.resetTimer();
+                          final path = await recordController.stopRecord();
+                          _snackbarService
+                              .showHomeSnackBar("Recording save at $path");
+                          break;
+                      }
+                    },
+                    child: FloatingActionButton(
+                      heroTag: "Record",
+                      shape: const CircleBorder(),
+                      child: StreamBuilder(
+                        stream: recordController.recordStateStream,
+                        builder: (context, snapshot) {
+                          switch (snapshot.data) {
+                            case RecordState.ready:
+                              return const Icon(
+                                Icons.mic,
+                              );
+                            case RecordState.recording:
+                              return const Icon(
+                                Icons.stop,
+                              );
+                            case RecordState.paused:
+                              return const Icon(
+                                Icons.stop,
+                              );
+                            case RecordState.error:
+                              return const Icon(
+                                Icons.error,
+                              );
+                            default:
+                              return const Icon(
+                                Icons.mic,
+                              );
+                          }
+                        },
+                      ),
+                      elevation: recordController.recordState ==
+                                  RecordState.recording &&
+                              holding
+                          ? 6
+                          : 0,
+                      onPressed: () async {
+                        switch (recordController.recordState) {
+                          case RecordState.ready:
+                            final permission =
+                                await recordController.checkPermission();
+                            logger.e(permission);
+                            if (permission) {
+                              final path = await pathController.getDocPath();
+                              logger.e(path);
+                              timerController.resetTimer();
+                              timerController.startTimer();
+                              timerController.startAmplitudeTimer(() {
+                                recordController.getAmplitude();
+                              });
+                              recordController.startRecord(path);
+                            } else {
+                              recordController.recordState = RecordState.error;
+                            }
+                            break;
+                          case RecordState.recording:
+                            timerController.cancelAmplitudeTimer();
+                            timerController.cancelTimer();
+                            timerController.resetTimer();
+                            final path = await recordController.stopRecord();
+                            _snackbarService
+                                .showHomeSnackBar("Recording save at $path");
+                            break;
+                          case RecordState.paused:
+                            timerController.cancelAmplitudeTimer();
+                            timerController.cancelTimer();
+                            timerController.resetTimer();
+                            final path = await recordController.stopRecord();
+                            _snackbarService
+                                .showHomeSnackBar("Recording save at $path");
+                            break;
+                          case RecordState.error:
+                            break;
+                          default:
+                            final permission =
+                                await recordController.checkPermission();
+                            logger.e(permission);
+                            if (permission) {
+                              final path = await pathController.getDocPath();
+                              logger.e(path);
+                              timerController.resetTimer();
+                              timerController.startTimer();
+                              timerController.startAmplitudeTimer(() {
+                                recordController.getAmplitude();
+                              });
+                              recordController.startRecord(path);
+                            } else {
+                              recordController.recordState = RecordState.error;
+                            }
+                            break;
+                        }
+                      },
+                    ),
+                  ),
+                ),
+                IgnorePointer(
+                  child: recordController.recordState == RecordState.recording
+                      ? SizedBox(
+                          height: ((width * 0.258 * 0.2 * animation.value) +
+                              width * 0.258 * 0.8),
+                          width: ((width * 0.258 * 0.2 * animation.value) +
+                              width * 0.258 * 0.8),
+                          child: CircularProgressIndicator(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ))
+                      : Container(),
+                ),
+              ],
+            ),
+            childWhenDragging: SizedBox(
               height: width * 0.486,
               width: width * 0.486,
             ),
-          ),
-          SizedBox(
-            height:
-                ((width * 0.218 * 0.2 * animation.value) + width * 0.218 * 0.8),
-            width:
-                ((width * 0.218 * 0.2 * animation.value) + width * 0.218 * 0.8),
-            child: GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onLongPressStart: (details) async {
-                switch (recordController.recordState) {
-                  case RecordState.ready:
-                    final permission = await recordController.checkPermission();
-                    logger.e(permission);
-                    if (permission) {
-                      setState(() {
-                        holding = true;
-                      });
-                      final path = await pathController.getDocPath();
-                      logger.e(path);
-                      timerController.resetTimer();
-                      timerController.startTimer();
-                      timerController.startAmplitudeTimer(() {
-                        recordController.getAmplitude();
-                      });
-                      recordController.startRecord(path);
-                    } else {
-                      recordController.recordState = RecordState.error;
-                    }
-                    break;
-                  case RecordState.recording:
-                    setState(() {
-                      holding = true;
-                    });
-                    break;
-                  case RecordState.paused:
-                    break;
-                  case RecordState.error:
-                    break;
-                  default:
-                    final permission = await recordController.checkPermission();
-                    logger.e(permission);
-                    if (permission) {
-                      setState(() {
-                        holding = true;
-                      });
-                      final path = await pathController.getDocPath();
-                      logger.e(path);
-                      timerController.resetTimer();
-                      timerController.startTimer();
-                      timerController.startAmplitudeTimer(() {
-                        recordController.getAmplitude();
-                      });
-                      recordController.startRecord(path);
-                    } else {
-                      recordController.recordState = RecordState.error;
-                    }
-                    break;
-                }
-              },
-              onLongPressEnd: (details) async {
-                switch (recordController.recordState) {
-                  case RecordState.ready:
-                    break;
-                  case RecordState.recording:
-                    setState(() {
-                      holding = false;
-                    });
-                    timerController.cancelAmplitudeTimer();
-                    timerController.cancelTimer();
-                    timerController.resetTimer();
-                    final path = await recordController.stopRecord();
-                    _snackbarService
-                        .showHomeSnackBar("Recording save at $path");
-                    break;
-                  case RecordState.paused:
-                    break;
-                  case RecordState.error:
-                    break;
-                  default:
-                    setState(() {
-                      holding = false;
-                    });
-                    timerController.cancelAmplitudeTimer();
-                    timerController.cancelTimer();
-                    timerController.resetTimer();
-                    final path = await recordController.stopRecord();
-                    _snackbarService
-                        .showHomeSnackBar("Recording save at $path");
-                    break;
-                }
-              },
-              child: FloatingActionButton(
-                heroTag: "Record",
-                shape: const CircleBorder(),
-                child: StreamBuilder(
-                  stream: recordController.recordStateStream,
-                  builder: (context, snapshot) {
-                    switch (snapshot.data) {
-                      case RecordState.ready:
-                        return const Icon(
-                          Icons.mic,
-                        );
-                      case RecordState.recording:
-                        return const Icon(
-                          Icons.stop,
-                        );
-                      case RecordState.paused:
-                        return const Icon(
-                          Icons.stop,
-                        );
-                      case RecordState.error:
-                        return const Icon(
-                          Icons.error,
-                        );
-                      default:
-                        return const Icon(
-                          Icons.mic,
-                        );
-                    }
-                  },
-                ),
-                elevation:
-                    recordController.recordState == RecordState.recording &&
-                            holding
-                        ? 6
-                        : 0,
-                onPressed: () async {
-                  switch (recordController.recordState) {
-                    case RecordState.ready:
-                      final permission =
-                          await recordController.checkPermission();
-                      logger.e(permission);
-                      if (permission) {
-                        final path = await pathController.getDocPath();
-                        logger.e(path);
-                        timerController.resetTimer();
-                        timerController.startTimer();
-                        timerController.startAmplitudeTimer(() {
-                          recordController.getAmplitude();
-                        });
-                        recordController.startRecord(path);
-                      } else {
-                        recordController.recordState = RecordState.error;
-                      }
-                      break;
-                    case RecordState.recording:
-                      timerController.cancelAmplitudeTimer();
-                      timerController.cancelTimer();
-                      timerController.resetTimer();
-                      final path = await recordController.stopRecord();
-                      _snackbarService
-                          .showHomeSnackBar("Recording save at $path");
-                      break;
-                    case RecordState.paused:
-                      timerController.cancelAmplitudeTimer();
-                      timerController.cancelTimer();
-                      timerController.resetTimer();
-                      final path = await recordController.stopRecord();
-                      _snackbarService
-                          .showHomeSnackBar("Recording save at $path");
-                      break;
-                    case RecordState.error:
-                      break;
-                    default:
-                      final permission =
-                          await recordController.checkPermission();
-                      logger.e(permission);
-                      if (permission) {
-                        final path = await pathController.getDocPath();
-                        logger.e(path);
-                        timerController.resetTimer();
-                        timerController.startTimer();
-                        timerController.startAmplitudeTimer(() {
-                          recordController.getAmplitude();
-                        });
-                        recordController.startRecord(path);
-                      } else {
-                        recordController.recordState = RecordState.error;
-                      }
-                      break;
-                  }
-                },
-              ),
-            ),
-          ),
-          IgnorePointer(
-            child: recordController.recordState == RecordState.recording
-                ? SizedBox(
-                    height: ((width * 0.258 * 0.2 * animation.value) +
-                        width * 0.258 * 0.8),
-                    width: ((width * 0.258 * 0.2 * animation.value) +
-                        width * 0.258 * 0.8),
-                    child: CircularProgressIndicator(
-                      color: Theme.of(context).colorScheme.secondary,
-                    ))
-                : Container(),
           ),
         ],
       ),
