@@ -143,6 +143,11 @@ class _RecordButtonState extends State<RecordButton>
                           });
                           break;
                         case RecordState.paused:
+                          _resumeRecording(
+                            () => setState(() {
+                              holding = true;
+                            }),
+                          );
                           break;
                         case RecordState.error:
                           break;
@@ -166,26 +171,22 @@ class _RecordButtonState extends State<RecordButton>
                       //     "x: $x, y: $y offset:${details.localOffsetFromOrigin.dy.abs() > 130} direction:${details.localOffsetFromOrigin.direction.isNegative} lock:${details.localOffsetFromOrigin.dy.abs() > 130 && details.localOffsetFromOrigin.direction.isNegative}");
                     },
                     onLongPressEnd: (details) async {
+                      setState(() {
+                        holding = false;
+                      });
                       switch (recordController.recordState) {
                         case RecordState.ready:
                           break;
                         case RecordState.recording:
-                          setState(() {
-                            holding = false;
-                          });
                           if (!lock) {
                             _stopRecording();
                           }
-
                           break;
                         case RecordState.paused:
                           break;
                         case RecordState.error:
                           break;
                         default:
-                          setState(() {
-                            holding = false;
-                          });
                           if (!lock) {
                             _stopRecording();
                           }
@@ -305,7 +306,21 @@ class _RecordButtonState extends State<RecordButton>
     timerController.resetTimer();
     final path = await recordController.stopRecord();
     widget.showLastRecording(true, path, recordingTime);
-    waveformController.loadWave(path);
+    // TODO Fix why wave is not loading
+    // waveformController.loadWave(path);
     _snackbarService.showHomeSnackBar("Recording save at $path");
+  }
+
+  Future<void> _resumeRecording(Function() action) async {
+    final RecordController recordController =
+        Provider.of<RecordController>(context, listen: false);
+    final TimerController timerController =
+        Provider.of<TimerController>(context, listen: false);
+    action();
+    timerController.startTimer();
+    timerController.startAmplitudeTimer(() {
+      recordController.getAmplitude();
+    });
+    recordController.resumeRecord();
   }
 }

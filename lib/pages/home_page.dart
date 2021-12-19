@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    logger.d("${90 / MediaQuery.of(context).size.width}");
+    // logger.d("${90 / MediaQuery.of(context).size.width}");
     final darkAppBarContents =
         Theme.of(context).scaffoldBackgroundColor.computeLuminance() > 0.5;
 
