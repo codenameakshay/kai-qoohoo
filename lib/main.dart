@@ -9,6 +9,7 @@ import 'package:kai/controllers/record_controller.dart';
 import 'package:kai/controllers/settings_controller.dart';
 import 'package:kai/controllers/theme_controller.dart';
 import 'package:kai/controllers/timer_controller.dart';
+import 'package:kai/controllers/waveform_controller.dart';
 import 'package:kai/router/route_observer.dart';
 import 'package:kai/services/locator_service.dart';
 import 'package:kai/router/app_router.dart';
@@ -39,6 +40,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => SettingsController(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => WaveformController(),
         ),
       ],
       child: const MyApp(),
