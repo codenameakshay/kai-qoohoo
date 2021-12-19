@@ -31,12 +31,12 @@ class LastRecordingBubble extends StatelessWidget {
         children: [
           LRPlayPauseButton(path: path),
           AudioWaveformWidget(
-            duration: time,
+            duration: time.clamp(0, 25),
             strokeWidth: 4,
             waveColor: Theme.of(context).colorScheme.secondary,
-            child: const SizedBox(
+            child: SizedBox(
               height: 60,
-              width: 70,
+              width: time.clamp(0, 25) * 8.0,
             ),
           ),
           Padding(
