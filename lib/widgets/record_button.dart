@@ -26,7 +26,10 @@ class _RecordButtonState extends State<RecordButton>
   final Tween<double> _sizeTween = Tween(begin: .4, end: 1);
   bool glow = true;
   bool holding = false;
-  IconData iconData = Icons.lock_open;
+  // bool dragging = false;
+  double x = 0;
+  double y = 0;
+  bool lock = false;
   @override
   void initState() {
     super.initState();
@@ -74,134 +77,75 @@ class _RecordButtonState extends State<RecordButton>
         children: [
           AnimatedPositioned(
               duration: const Duration(milliseconds: 250),
-              top: holding ? -70 : 60,
-              height: holding ? 56 : 0,
-              child: DragTarget(
-                onWillAccept: (data) {
-                  setState(() {
-                    iconData = Icons.lock;
-                  });
-                  return true;
-                },
-                onLeave: (data) {
-                  setState(() {
-                    iconData = Icons.lock_open;
-                  });
-                },
-                onAccept: (data) {
-                  setState(() {
-                    iconData = Icons.lock_open;
-                  });
-                },
-                builder: (context, candidateData, rejectedData) => Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Theme.of(context).colorScheme.surface,
+              top: holding
+                  ? lock
+                      ? -90
+                      : -70
+                  : 56,
+              height: holding
+                  ? lock
+                      ? 96
+                      : 56
+                  : 0,
+              child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Theme.of(context).colorScheme.surface,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(lock ? 26 : 16.0),
+                    child: Icon(
+                      lock ? Icons.lock : Icons.lock_open,
+                      size: holding
+                          ? lock
+                              ? 44
+                              : 24
+                          : 0,
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Icon(
-                        iconData,
-                        size: holding ? 24 : 0,
-                      ),
-                    )),
-              )),
-          Draggable(
-            onDragStarted: () => logger.d("Drag started"),
-            axis: Axis.vertical,
-            feedback: Stack(
-              clipBehavior: Clip.none,
-              alignment: Alignment.center,
-              children: [
-                CustomPaint(
-                  painter: RipplePainter(
-                      color: Theme.of(context).colorScheme.secondary,
-                      animationValue: animation.value,
-                      width: width * 0.486),
-                  child: SizedBox(
-                    height: width * 0.486,
-                    width: width * 0.486,
-                  ),
+                  ))),
+          Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.center,
+            children: [
+              CustomPaint(
+                painter: RipplePainter(
+                    color: Theme.of(context).colorScheme.secondary,
+                    animationValue: animation.value,
+                    width: width * 0.486),
+                child: SizedBox(
+                  height: width * 0.486,
+                  width: width * 0.486,
                 ),
-                SizedBox(
-                  height: ((width * 0.218 * 0.2 * animation.value) +
-                      width * 0.218 * 0.8),
-                  width: ((width * 0.218 * 0.2 * animation.value) +
-                      width * 0.218 * 0.8),
-                  child: FloatingActionButton(
-                    heroTag: "Record",
-                    shape: const CircleBorder(),
-                    child: StreamBuilder(
-                      stream: recordController.recordStateStream,
-                      builder: (context, snapshot) {
-                        switch (snapshot.data) {
-                          case RecordState.ready:
-                            return const Icon(
-                              Icons.mic,
-                            );
-                          case RecordState.recording:
-                            return const Icon(
-                              Icons.stop,
-                            );
-                          case RecordState.paused:
-                            return const Icon(
-                              Icons.stop,
-                            );
-                          case RecordState.error:
-                            return const Icon(
-                              Icons.error,
-                            );
-                          default:
-                            return const Icon(
-                              Icons.mic,
-                            );
-                        }
-                      },
-                    ),
-                    elevation:
-                        recordController.recordState == RecordState.recording &&
-                                holding
-                            ? 6
-                            : 0,
-                    onPressed: () {},
-                  ),
-                ),
-                IgnorePointer(
-                  child: recordController.recordState == RecordState.recording
-                      ? SizedBox(
-                          height: ((width * 0.258 * 0.2 * animation.value) +
-                              width * 0.258 * 0.8),
-                          width: ((width * 0.258 * 0.2 * animation.value) +
-                              width * 0.258 * 0.8),
-                          child: CircularProgressIndicator(
-                            color: Theme.of(context).colorScheme.secondary,
-                          ))
-                      : Container(),
-                ),
-              ],
-            ),
-            child: Stack(
-              clipBehavior: Clip.none,
-              alignment: Alignment.center,
-              children: [
-                CustomPaint(
-                  painter: RipplePainter(
-                      color: Theme.of(context).colorScheme.secondary,
-                      animationValue: animation.value,
-                      width: width * 0.486),
-                  child: SizedBox(
-                    height: width * 0.486,
-                    width: width * 0.486,
-                  ),
-                ),
-                SizedBox(
-                  height: ((width * 0.218 * 0.2 * animation.value) +
-                      width * 0.218 * 0.8),
-                  width: ((width * 0.218 * 0.2 * animation.value) +
-                      width * 0.218 * 0.8),
+              ),
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 250),
+                top: holding ? y : (((width * 0.486) - (width * 0.218)) / 2),
+                left: (((width * 0.486) - (width * 0.218)) / 2),
+                child: SizedBox(
+                  height: (width * 0.218),
+                  width: (width * 0.218),
                   child: GestureDetector(
                     behavior: HitTestBehavior.translucent,
+                    // onVerticalDragStart: (details) {
+                    //   if (holding) {
+                    //     setState(() {
+                    //       dragging = true;
+                    //     });
+                    //     logger.d("dragging: $dragging");
+                    //   }
+                    // },
+                    // onVerticalDragEnd: (details) {
+                    //   setState(() {
+                    //     dragging = false;
+                    //   });
+                    //   logger.d("dragging: $dragging");
+                    // },
                     onLongPressStart: (details) async {
+                      setState(() {
+                        x = details.localPosition.dx;
+                        y = details.localPosition.dy;
+                      });
+                      logger.i("x: $x, y: $y");
                       switch (recordController.recordState) {
                         case RecordState.ready:
                           final permission =
@@ -254,7 +198,22 @@ class _RecordButtonState extends State<RecordButton>
                           break;
                       }
                     },
+                    onLongPressMoveUpdate: (details) {
+                      setState(() {
+                        x = details.localPosition.dx;
+                        y = details.localPosition.dy;
+                        lock = details.localOffsetFromOrigin.dy.abs() > 130 &&
+                            details.localOffsetFromOrigin.direction.isNegative;
+                      });
+                      // logger.i(
+                      //     "x: $x, y: $y offset:${details.localOffsetFromOrigin.dy.abs() > 130} direction:${details.localOffsetFromOrigin.direction.isNegative} lock:${details.localOffsetFromOrigin.dy.abs() > 130 && details.localOffsetFromOrigin.direction.isNegative}");
+                    },
                     onLongPressEnd: (details) async {
+                      // setState(() {
+                      //   x = details.localPosition.dx;
+                      //   y = details.localPosition.dy;
+                      // });
+                      // logger.i("x: $x, y: $y");
                       switch (recordController.recordState) {
                         case RecordState.ready:
                           break;
@@ -262,12 +221,15 @@ class _RecordButtonState extends State<RecordButton>
                           setState(() {
                             holding = false;
                           });
-                          timerController.cancelAmplitudeTimer();
-                          timerController.cancelTimer();
-                          timerController.resetTimer();
-                          final path = await recordController.stopRecord();
-                          _snackbarService
-                              .showHomeSnackBar("Recording save at $path");
+                          if (!lock) {
+                            timerController.cancelAmplitudeTimer();
+                            timerController.cancelTimer();
+                            timerController.resetTimer();
+                            final path = await recordController.stopRecord();
+                            _snackbarService
+                                .showHomeSnackBar("Recording save at $path");
+                          }
+
                           break;
                         case RecordState.paused:
                           break;
@@ -277,12 +239,14 @@ class _RecordButtonState extends State<RecordButton>
                           setState(() {
                             holding = false;
                           });
-                          timerController.cancelAmplitudeTimer();
-                          timerController.cancelTimer();
-                          timerController.resetTimer();
-                          final path = await recordController.stopRecord();
-                          _snackbarService
-                              .showHomeSnackBar("Recording save at $path");
+                          if (!lock) {
+                            timerController.cancelAmplitudeTimer();
+                            timerController.cancelTimer();
+                            timerController.resetTimer();
+                            final path = await recordController.stopRecord();
+                            _snackbarService
+                                .showHomeSnackBar("Recording save at $path");
+                          }
                           break;
                       }
                     },
@@ -380,24 +344,18 @@ class _RecordButtonState extends State<RecordButton>
                     ),
                   ),
                 ),
-                IgnorePointer(
-                  child: recordController.recordState == RecordState.recording
-                      ? SizedBox(
-                          height: ((width * 0.258 * 0.2 * animation.value) +
-                              width * 0.258 * 0.8),
-                          width: ((width * 0.258 * 0.2 * animation.value) +
-                              width * 0.258 * 0.8),
-                          child: CircularProgressIndicator(
-                            color: Theme.of(context).colorScheme.secondary,
-                          ))
-                      : Container(),
-                ),
-              ],
-            ),
-            childWhenDragging: SizedBox(
-              height: width * 0.486,
-              width: width * 0.486,
-            ),
+              ),
+              IgnorePointer(
+                child: recordController.recordState == RecordState.recording
+                    ? SizedBox(
+                        height: (width * 0.258),
+                        width: (width * 0.258),
+                        child: CircularProgressIndicator(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ))
+                    : Container(),
+              ),
+            ],
           ),
         ],
       ),
