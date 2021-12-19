@@ -55,8 +55,14 @@ class RecordingCard extends StatelessWidget {
               ListTile(
                 onTap: () async {
                   HapticFeedback.vibrate();
-                  await apc.setSource(file.path);
-                  apc.play();
+                  if (apc.audioPlayer.playing &&
+                      apc.audioPlayer.processingState !=
+                          ProcessingState.completed) {
+                    apc.stop();
+                  } else {
+                    await apc.setSource(file.path);
+                    apc.play();
+                  }
                 },
                 leading: const Icon(Icons.music_note),
                 title: Text(dateFormat.format(dateTime)),
@@ -72,7 +78,7 @@ class RecordingCard extends StatelessWidget {
                       apc.audioPlayer.playing &&
                               apc.audioPlayer.processingState !=
                                   ProcessingState.completed
-                          ? Icons.pause
+                          ? Icons.stop
                           : Icons.play_arrow,
                       color: Theme.of(context).colorScheme.onSecondary,
                     )),
