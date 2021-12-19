@@ -26,6 +26,9 @@ class RecordingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String fileName = p.basename(file.path);
+    if (fileName.substring(0, 3) != "Kai") {
+      return Container();
+    }
     final List<String> splitData = fileName.split("_");
     // logger.d(splitData);
     final DateFormat dateFormat = DateFormat("dd MMM yyyy");

@@ -23,8 +23,11 @@ class _RecordingSheetState extends State<RecordingSheet> {
   @override
   Widget build(BuildContext context) {
     final PathController _pathController = Provider.of<PathController>(context);
-    final files = _pathController.directory?.listSync();
+    var files = _pathController.directory?.listSync();
     files?.sort((a, b) => p.basename(b.path).compareTo(p.basename(a.path)));
+    files?.removeWhere(
+        (element) => p.basename(element.path).substring(0, 3) != 'Kai');
+    if (files?.isEmpty == true) files = null;
     return ScrollableBottomSheet(
       title: "Previous Recordings",
       padding: const EdgeInsets.fromLTRB(8, 20, 8, 8),

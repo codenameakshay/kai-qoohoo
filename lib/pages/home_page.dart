@@ -5,6 +5,7 @@ import 'package:kai/pages/record_page.dart';
 import 'package:kai/services/locator_service.dart';
 import 'package:kai/services/logger_service.dart';
 import 'package:kai/services/snackbar_service.dart';
+import 'package:kai/widgets/bug_report_button.dart';
 import 'package:kai/widgets/realistic_graph_button.dart';
 import 'package:provider/provider.dart';
 
@@ -49,15 +50,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           actions: [
-            // IconButton(
-            //   onPressed: () {},
-            //   icon: const Icon(Icons.search),
-            //   color: darkAppBarContents
-            //       ? Theme.of(context)
-            //           .bottomNavigationBarTheme
-            //           .unselectedItemColor
-            //       : Theme.of(context).appBarTheme.titleTextStyle?.color,
-            // ),
             RealisticGraphButton(darkAppBarContents: darkAppBarContents),
             IconButton(
               onPressed: () {
@@ -72,6 +64,7 @@ class _HomePageState extends State<HomePage> {
                       .unselectedItemColor
                   : Theme.of(context).appBarTheme.titleTextStyle?.color,
             ),
+            BugReportButton(darkAppBarContents: darkAppBarContents),
           ],
         ),
         body: const RecordPage(),

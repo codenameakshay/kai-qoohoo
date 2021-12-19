@@ -30,9 +30,12 @@ dependencies:
   animations: ^2.0.2
   auto_route: ^3.2.0
   cupertino_icons: ^1.0.2
+  device_info_plus: ^3.2.0
   flex_color_scheme: ^4.1.1
   flutter:
     sdk: flutter
+  flutter_archive: ^4.1.0
+  flutter_mailer: ^2.0.1
   get_it: ^7.2.0
   google_fonts: ^2.1.0
   intl: ^0.17.0
