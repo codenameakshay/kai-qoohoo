@@ -38,6 +38,7 @@ dependencies:
   google_fonts: ^2.1.0
   intl: ^0.17.0
   just_audio: ^0.9.18
+  just_waveform: ^0.0.1
   linalg: ^0.4.0
   logger: ^1.1.0
   path_provider: ^2.0.8
