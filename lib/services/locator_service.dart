@@ -22,7 +22,8 @@ GetIt locator = GetIt.instance;
 
 void setupLocator() {
   Stopwatch stopwatch = Stopwatch()..start();
-  locator.registerFactory<AudioPlayerController>(() => AudioPlayerController());
+  locator
+      .registerFactory<AudioPlayerController>(() => AudioPlayerController(""));
   locator.registerFactory<PathController>(() => PathController());
   locator.registerFactory<RecordController>(() => RecordController());
   locator.registerFactory<TimerController>(() => TimerController());

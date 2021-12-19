@@ -36,7 +36,7 @@ void main() async {
           create: (_) => PathController(),
         ),
         ChangeNotifierProvider(
-          create: (_) => AudioPlayerController(),
+          create: (_) => AudioPlayerController(""),
         ),
         ChangeNotifierProvider(
           create: (_) => SettingsController(),

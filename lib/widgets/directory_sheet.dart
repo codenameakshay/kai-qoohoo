@@ -5,6 +5,7 @@ import 'package:kai/services/locator_service.dart';
 import 'package:kai/widgets/recording_card.dart';
 import 'package:kai/widgets/scrollable_bottom_sheet.dart';
 import 'package:provider/provider.dart';
+import 'package:path/path.dart' as p;
 
 class RecordingSheet extends StatefulWidget {
   const RecordingSheet({
@@ -24,6 +25,8 @@ class _RecordingSheetState extends State<RecordingSheet> {
   @override
   Widget build(BuildContext context) {
     final PathController _pathController = Provider.of<PathController>(context);
+    final files = _pathController.directory?.listSync();
+    files?.sort((a, b) => p.basename(b.path).compareTo(p.basename(a.path)));
     return ScrollableBottomSheet(
       title: "Previous Recordings",
       padding: const EdgeInsets.fromLTRB(8, 20, 8, 8),
@@ -35,7 +38,7 @@ class _RecordingSheetState extends State<RecordingSheet> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: _pathController.directory?.listSync().map((e) {
+            children: files?.map((e) {
                   return RecordingCard(
                     key: ValueKey(e.path),
                     file: e,

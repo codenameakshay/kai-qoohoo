@@ -33,14 +33,13 @@ class RecordingCard extends StatelessWidget {
     final int samplingRate = int.parse(splitData[3].toString());
     final String fileFormat = splitData[4].split(".")[1];
     return ChangeNotifierProvider<AudioPlayerController>(
-      create: (_) => AudioPlayerController(),
+      create: (_) => AudioPlayerController(file.path),
       child: Card(
         elevation: 0,
         color: Theme.of(context).colorScheme.primaryVariant,
         child: Consumer<AudioPlayerController>(builder: (context, apc, child) {
           return ListTile(
             onTap: () async {
-              await apc.setSource(file.path);
               apc.play();
             },
             leading: const Icon(Icons.music_note),

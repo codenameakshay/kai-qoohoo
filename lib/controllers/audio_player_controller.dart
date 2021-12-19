@@ -12,7 +12,8 @@ class AudioPlayerController with ChangeNotifier {
   late StreamSubscription<Duration> _positionChangedSubscription;
 
   // add listerners
-  AudioPlayerController() {
+  AudioPlayerController(String path) {
+    _audioPlayerService.setSource(path);
     _playerStateChangedSubscription =
         _audioPlayerService.playerStateStream.listen((state) {
       logger.d('player state changed: $state');
