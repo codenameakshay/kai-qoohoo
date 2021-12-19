@@ -8,13 +8,11 @@ class ScrollableBottomSheet extends StatelessWidget {
     Key? key,
     required this.title,
     required this.child,
-    required this.action,
     this.padding = const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0),
     this.disabled = false,
   }) : super(key: key);
   final String title;
   final Widget Function(ScrollController) child;
-  final Map action;
   final bool disabled;
   final EdgeInsetsGeometry padding;
 
@@ -86,16 +84,6 @@ class ScrollableBottomSheet extends StatelessWidget {
                         ),
                         // const Spacer(),
                       ]),
-                  Positioned(
-                    bottom: 24,
-                    right: 8,
-                    child: FloatingActionButton(
-                      onPressed: disabled ? null : action["onPressed"],
-                      child: Icon(
-                        action["icon"],
-                      ),
-                    ),
-                  )
                 ],
               )),
         ),

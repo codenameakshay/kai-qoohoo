@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kai/controllers/path_controller.dart';
-import 'package:kai/router/app_router.dart';
-import 'package:kai/services/locator_service.dart';
 import 'package:kai/widgets/recording_card.dart';
 import 'package:kai/widgets/scrollable_bottom_sheet.dart';
 import 'package:provider/provider.dart';
@@ -38,22 +36,20 @@ class _RecordingSheetState extends State<RecordingSheet> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: files?.map((e) {
+            children: (files?.map((e) {
                   return RecordingCard(
                     key: ValueKey(e.path),
                     file: e,
-                  );
+                  ) as Widget;
                 }).toList() ??
-                [const Center(child: Text("No recordings found"))],
+                [const Center(child: Text("No recordings found"))])
+              ..add(const SizedBox(
+                height: 16,
+              )),
           ),
         ),
       ),
-      action: {
-        'icon': Icons.check,
-        'onPressed': () {
-          locator<AppRouter>().pop(context);
-        },
-      },
+      disabled: true,
     );
   }
 }

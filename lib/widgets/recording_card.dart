@@ -37,7 +37,7 @@ class RecordingCard extends StatelessWidget {
       int.parse(splitData[1].toString().split("-")[4]),
       int.parse(splitData[1].toString().split("-")[5]),
     );
-    final int bitRate = int.parse(splitData[2].toString());
+    // final int bitRate = int.parse(splitData[2].toString());
     final int samplingRate = int.parse(splitData[3].toString());
     final String fileFormat = splitData[4].split(".")[1];
     return ChangeNotifierProvider<AudioPlayerController>(
