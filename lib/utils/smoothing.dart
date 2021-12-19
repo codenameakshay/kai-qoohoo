@@ -1,4 +1,4 @@
-import 'package:kai/services/logger_service.dart';
+// import 'package:kai/services/logger_service.dart';
 import 'package:linalg/linalg.dart';
 import 'dart:math';
 
@@ -55,7 +55,7 @@ class SgFilter {
     try {
       kernel =
           matrix * (matrix.transpose() * matrix).inverse() * matrix.transpose();
-    } catch (e, s) {
+    } catch (e) {
       // logger.e(e, e, s);
       kernel = matrix * (matrix.transpose() * matrix) * matrix.transpose();
     }

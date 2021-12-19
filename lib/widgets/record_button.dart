@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:kai/controllers/path_controller.dart';
 import 'package:kai/controllers/record_controller.dart';
@@ -13,7 +12,9 @@ import 'package:provider/provider.dart';
 class RecordButton extends StatefulWidget {
   const RecordButton({
     Key? key,
+    required this.showLastRecording,
   }) : super(key: key);
+  final Function(bool value, String path) showLastRecording;
 
   @override
   State<RecordButton> createState() => _RecordButtonState();
@@ -64,10 +65,6 @@ class _RecordButtonState extends State<RecordButton>
     final width = MediaQuery.of(context).size.width;
     final RecordController recordController =
         Provider.of<RecordController>(context);
-    final PathController pathController = Provider.of<PathController>(context);
-    final TimerController timerController =
-        Provider.of<TimerController>(context);
-    final SnackbarService _snackbarService = locator<SnackbarService>();
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Stack(
@@ -133,24 +130,11 @@ class _RecordButtonState extends State<RecordButton>
                       logger.i("x: $x, y: $y");
                       switch (recordController.recordState) {
                         case RecordState.ready:
-                          final permission =
-                              await recordController.checkPermission();
-                          logger.e(permission);
-                          if (permission) {
-                            setState(() {
+                          _startRecording(
+                            () => setState(() {
                               holding = true;
-                            });
-                            final path = await pathController.getDocPath();
-                            logger.e(path);
-                            timerController.resetTimer();
-                            timerController.startTimer();
-                            timerController.startAmplitudeTimer(() {
-                              recordController.getAmplitude();
-                            });
-                            recordController.startRecord(path);
-                          } else {
-                            recordController.recordState = RecordState.error;
-                          }
+                            }),
+                          );
                           break;
                         case RecordState.recording:
                           setState(() {
@@ -162,24 +146,11 @@ class _RecordButtonState extends State<RecordButton>
                         case RecordState.error:
                           break;
                         default:
-                          final permission =
-                              await recordController.checkPermission();
-                          logger.e(permission);
-                          if (permission) {
-                            setState(() {
+                          _startRecording(
+                            () => setState(() {
                               holding = true;
-                            });
-                            final path = await pathController.getDocPath();
-                            logger.e(path);
-                            timerController.resetTimer();
-                            timerController.startTimer();
-                            timerController.startAmplitudeTimer(() {
-                              recordController.getAmplitude();
-                            });
-                            recordController.startRecord(path);
-                          } else {
-                            recordController.recordState = RecordState.error;
-                          }
+                            }),
+                          );
                           break;
                       }
                     },
@@ -202,12 +173,7 @@ class _RecordButtonState extends State<RecordButton>
                             holding = false;
                           });
                           if (!lock) {
-                            timerController.cancelAmplitudeTimer();
-                            timerController.cancelTimer();
-                            timerController.resetTimer();
-                            final path = await recordController.stopRecord();
-                            _snackbarService
-                                .showHomeSnackBar("Recording save at $path");
+                            _stopRecording();
                           }
 
                           break;
@@ -220,12 +186,7 @@ class _RecordButtonState extends State<RecordButton>
                             holding = false;
                           });
                           if (!lock) {
-                            timerController.cancelAmplitudeTimer();
-                            timerController.cancelTimer();
-                            timerController.resetTimer();
-                            final path = await recordController.stopRecord();
-                            _snackbarService
-                                .showHomeSnackBar("Recording save at $path");
+                            _stopRecording();
                           }
                           break;
                       }
@@ -268,56 +229,18 @@ class _RecordButtonState extends State<RecordButton>
                       onPressed: () async {
                         switch (recordController.recordState) {
                           case RecordState.ready:
-                            final permission =
-                                await recordController.checkPermission();
-                            logger.e(permission);
-                            if (permission) {
-                              final path = await pathController.getDocPath();
-                              logger.e(path);
-                              timerController.resetTimer();
-                              timerController.startTimer();
-                              timerController.startAmplitudeTimer(() {
-                                recordController.getAmplitude();
-                              });
-                              recordController.startRecord(path);
-                            } else {
-                              recordController.recordState = RecordState.error;
-                            }
+                            _startRecording(() {});
                             break;
                           case RecordState.recording:
-                            timerController.cancelAmplitudeTimer();
-                            timerController.cancelTimer();
-                            timerController.resetTimer();
-                            final path = await recordController.stopRecord();
-                            _snackbarService
-                                .showHomeSnackBar("Recording save at $path");
+                            _stopRecording();
                             break;
                           case RecordState.paused:
-                            timerController.cancelAmplitudeTimer();
-                            timerController.cancelTimer();
-                            timerController.resetTimer();
-                            final path = await recordController.stopRecord();
-                            _snackbarService
-                                .showHomeSnackBar("Recording save at $path");
+                            _stopRecording();
                             break;
                           case RecordState.error:
                             break;
                           default:
-                            final permission =
-                                await recordController.checkPermission();
-                            logger.e(permission);
-                            if (permission) {
-                              final path = await pathController.getDocPath();
-                              logger.e(path);
-                              timerController.resetTimer();
-                              timerController.startTimer();
-                              timerController.startAmplitudeTimer(() {
-                                recordController.getAmplitude();
-                              });
-                              recordController.startRecord(path);
-                            } else {
-                              recordController.recordState = RecordState.error;
-                            }
+                            _startRecording(() {});
                             break;
                         }
                       },
@@ -340,5 +263,45 @@ class _RecordButtonState extends State<RecordButton>
         ],
       ),
     );
+  }
+
+  Future<void> _startRecording(Function() action) async {
+    final RecordController recordController =
+        Provider.of<RecordController>(context, listen: false);
+    final TimerController timerController =
+        Provider.of<TimerController>(context, listen: false);
+    final PathController pathController =
+        Provider.of<PathController>(context, listen: false);
+    final permission = await recordController.checkPermission();
+    logger.e(permission);
+    if (permission) {
+      action();
+      widget.showLastRecording(false, "");
+      final path = await pathController.getDocPath();
+      logger.e(path);
+      timerController.resetTimer();
+      timerController.startTimer();
+      timerController.startAmplitudeTimer(() {
+        recordController.getAmplitude();
+      });
+      recordController.startRecord(path);
+    } else {
+      recordController.recordState = RecordState.error;
+    }
+  }
+
+  void _stopRecording() async {
+    final RecordController recordController =
+        Provider.of<RecordController>(context, listen: false);
+    final TimerController timerController =
+        Provider.of<TimerController>(context, listen: false);
+    final SnackbarService _snackbarService = locator<SnackbarService>();
+    timerController.cancelAmplitudeTimer();
+    timerController.cancelTimer();
+    timerController.resetTimer();
+    final path = await recordController.stopRecord();
+    widget.showLastRecording(true, path);
+
+    _snackbarService.showHomeSnackBar("Recording save at $path");
   }
 }
