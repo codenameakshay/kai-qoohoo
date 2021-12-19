@@ -46,7 +46,8 @@ class RecordService {
     final DateFormat dateFormat = DateFormat("yyyy-MM-dd-HH-mm-ss");
     try {
       await _record.start(
-        path: path + "/kai_${dateFormat.format(DateTime.now())}.$fileFormat",
+        path: path +
+            "/Kai_${dateFormat.format(DateTime.now())}_${bitRate}_${samplingRate.toInt()}_.$fileFormat",
         encoder: AudioEncoder.AAC_HE,
         bitRate: bitRate,
         samplingRate: samplingRate,
