@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:just_waveform/just_waveform.dart';
+import 'package:kai/controllers/waveform_controller.dart';
 import 'package:kai/services/logger_service.dart';
+import 'package:kai/widgets/audio_waveform_widget.dart';
+import 'package:provider/provider.dart';
 
 class LastRecordingBubble extends StatefulWidget {
   const LastRecordingBubble({
@@ -40,6 +44,10 @@ class _LastRecordingBubbleState extends State<LastRecordingBubble>
 
   @override
   Widget build(BuildContext context) {
+    final WaveformController waveformController =
+        Provider.of<WaveformController>(context);
+    final double progress = waveformController.progress?.progress ?? 0.0;
+    final Waveform? waveform = waveformController.progress?.waveform;
     return Card(
       margin: const EdgeInsets.all(16),
       child: Row(
@@ -64,6 +72,21 @@ class _LastRecordingBubbleState extends State<LastRecordingBubble>
                 icon: AnimatedIcons.play_pause,
                 progress: animation,
               )),
+          (waveform == null)
+              ? Center(
+                  child: Text(
+                    '${(100 * progress).toInt()}%',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                )
+              : AudioWaveformWidget(
+                  waveform: waveform,
+                  start: Duration.zero,
+                  duration: Duration(seconds: 2),
+                  // duration: waveform.duration,
+                  pixelsPerStep: 10,
+                  child: Text("yijafni"),
+                ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextButton(

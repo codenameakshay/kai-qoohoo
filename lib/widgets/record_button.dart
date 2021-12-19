@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kai/controllers/path_controller.dart';
 import 'package:kai/controllers/record_controller.dart';
 import 'package:kai/controllers/timer_controller.dart';
+import 'package:kai/controllers/waveform_controller.dart';
 import 'package:kai/painters/ripple_painter.dart';
 import 'package:kai/services/locator_service.dart';
 import 'package:kai/services/logger_service.dart';
@@ -295,13 +296,15 @@ class _RecordButtonState extends State<RecordButton>
         Provider.of<RecordController>(context, listen: false);
     final TimerController timerController =
         Provider.of<TimerController>(context, listen: false);
+    final WaveformController waveformController =
+        Provider.of<WaveformController>(context, listen: false);
     final SnackbarService _snackbarService = locator<SnackbarService>();
     timerController.cancelAmplitudeTimer();
     timerController.cancelTimer();
     timerController.resetTimer();
     final path = await recordController.stopRecord();
     widget.showLastRecording(true, path);
-
+    waveformController.loadWave(path);
     _snackbarService.showHomeSnackBar("Recording save at $path");
   }
 }

@@ -32,7 +32,11 @@ class WaveformService {
     try {
       final waveFile =
           File(p.join(await _pathService.getTempPath(), 'temp.wave'));
-      JustWaveform.extract(audioInFile: audioFile, waveOutFile: waveFile)
+      // JustWaveform.parse(audioFile).asStream().listen(progressStream.add, onError: progressStream.addError);
+      JustWaveform.extract(
+              audioInFile: audioFile,
+              waveOutFile: waveFile,
+              zoom: const WaveformZoom.pixelsPerSecond(100))
           .listen(progressStream.add, onError: progressStream.addError);
       waveState = WaveformState.ready;
     } catch (e) {
