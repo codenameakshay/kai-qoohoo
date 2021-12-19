@@ -24,6 +24,7 @@ class _RecordButtonState extends State<RecordButton>
   late AnimationController controller;
   final Tween<double> _sizeTween = Tween(begin: .4, end: 1);
   bool glow = true;
+  bool holding = false;
   @override
   void initState() {
     super.initState();
@@ -66,8 +67,25 @@ class _RecordButtonState extends State<RecordButton>
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Stack(
+        clipBehavior: Clip.none,
         alignment: Alignment.center,
         children: [
+          AnimatedPositioned(
+              duration: const Duration(milliseconds: 250),
+              top: holding ? -70 : 60,
+              height: holding ? 56 : 0,
+              child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Theme.of(context).colorScheme.surface,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Icon(
+                      Icons.lock,
+                      size: holding ? 24 : 0,
+                    ),
+                  ))),
           CustomPaint(
             painter: RipplePainter(
                 color: Theme.of(context).colorScheme.secondary,
@@ -91,6 +109,9 @@ class _RecordButtonState extends State<RecordButton>
                     final permission = await recordController.checkPermission();
                     logger.e(permission);
                     if (permission) {
+                      setState(() {
+                        holding = true;
+                      });
                       final path = await pathController.getDocPath();
                       logger.e(path);
                       timerController.resetTimer();
@@ -104,6 +125,9 @@ class _RecordButtonState extends State<RecordButton>
                     }
                     break;
                   case RecordState.recording:
+                    setState(() {
+                      holding = true;
+                    });
                     break;
                   case RecordState.paused:
                     break;
@@ -113,6 +137,9 @@ class _RecordButtonState extends State<RecordButton>
                     final permission = await recordController.checkPermission();
                     logger.e(permission);
                     if (permission) {
+                      setState(() {
+                        holding = true;
+                      });
                       final path = await pathController.getDocPath();
                       logger.e(path);
                       timerController.resetTimer();
@@ -132,6 +159,9 @@ class _RecordButtonState extends State<RecordButton>
                   case RecordState.ready:
                     break;
                   case RecordState.recording:
+                    setState(() {
+                      holding = false;
+                    });
                     timerController.cancelAmplitudeTimer();
                     timerController.cancelTimer();
                     timerController.resetTimer();
@@ -144,6 +174,9 @@ class _RecordButtonState extends State<RecordButton>
                   case RecordState.error:
                     break;
                   default:
+                    setState(() {
+                      holding = false;
+                    });
                     timerController.cancelAmplitudeTimer();
                     timerController.cancelTimer();
                     timerController.resetTimer();
@@ -183,9 +216,11 @@ class _RecordButtonState extends State<RecordButton>
                     }
                   },
                 ),
-                elevation: recordController.recordState == RecordState.recording
-                    ? 6
-                    : 0,
+                elevation:
+                    recordController.recordState == RecordState.recording &&
+                            holding
+                        ? 6
+                        : 0,
                 onPressed: () async {
                   switch (recordController.recordState) {
                     case RecordState.ready:

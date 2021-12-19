@@ -30,7 +30,7 @@ class RecordDuration extends StatelessWidget {
           child: _timerController.recordDuration == 0
               ? Center(
                   child: Text(
-                    'Press the button to start recording',
+                    'Tap and hold to record audio',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyText2,
                   ),
